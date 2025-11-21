@@ -1,25 +1,19 @@
-"use client";
+'use client';
 
-import { cn } from "@/lib/utils";
-import { createClient } from "@/lib/supabase/client";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import Link from "next/link";
-import { useState } from "react";
+import { cn } from '@/lib/utils';
+import { createClient } from '@/lib/supabase/client';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import Link from 'next/link';
+import { useState } from 'react';
+import { Key, ArrowLeft, Mail } from 'lucide-react';
 
 export function ForgotPasswordForm({
   className,
   ...props
-}: React.ComponentPropsWithoutRef<"div">) {
-  const [email, setEmail] = useState("");
+}: React.ComponentPropsWithoutRef<'div'>) {
+  const [email, setEmail] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -38,67 +32,77 @@ export function ForgotPasswordForm({
       if (error) throw error;
       setSuccess(true);
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred");
+      setError(error instanceof Error ? error.message : 'An error occurred');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
+    <div
+      className={cn('flex flex-col gap-6 items-start', className)}
+      {...props}
+    >
       {success ? (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-2xl">Check Your Email</CardTitle>
-            <CardDescription>Password reset instructions sent</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground">
-              If you registered using your email and password, you will receive
-              a password reset email.
-            </p>
-          </CardContent>
-        </Card>
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-col items-start gap-4">
+            <div className="w-12 h-12 rounded-xl shadow flex items-center justify-center">
+              <Mail className="w-6 h-6" />
+            </div>
+            <div className="text-left">
+              <h1 className="text-2xl font-bold mb-2">
+                Gata! Linkul de resetare e pe drum.
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                Am trimis către {email} un e-mail cu pașii necesari pentru a
+                restabili parola.
+              </p>
+            </div>
+          </div>
+        </div>
       ) : (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-2xl">Reset Your Password</CardTitle>
-            <CardDescription>
-              Type in your email and we&apos;ll send you a link to reset your
-              password
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleForgotPassword}>
-              <div className="flex flex-col gap-6">
-                <div className="grid gap-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="m@example.com"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-                {error && <p className="text-sm text-red-500">{error}</p>}
-                <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? "Sending..." : "Send reset email"}
-                </Button>
-              </div>
-              <div className="mt-4 text-center text-sm">
-                Already have an account?{" "}
-                <Link
-                  href="/auth/login"
-                  className="underline underline-offset-4"
-                >
-                  Login
-                </Link>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-col items-start gap-4">
+            <div className="w-12 h-12 rounded-xl shadow flex items-center justify-center">
+              <Key className="w-6 h-6" />
+            </div>
+            <div className="text-left">
+              <h1 className="text-2xl font-bold mb-2">
+                Ai uitat parola? Nicio grijă
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                Scrie e-mailul tău și îţi trimitem imediat instrucţiunile pentru
+                resetare.
+              </p>
+            </div>
+          </div>
+          <form onSubmit={handleForgotPassword} className="flex flex-col gap-6">
+            <div className="grid gap-2">
+              <Label htmlFor="email">Adresă de email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="Ex: ioan.vasile@policlinica.ro"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            {error && <p className="text-sm text-red-500">{error}</p>}
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? 'Se trimite...' : 'Trimite instrucţiuni'}
+            </Button>
+            <div className="text-center">
+              <Link
+                href="/auth/login"
+                className="inline-flex items-center gap-2 text-sm text-primary transition-colors"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Înapoi la autentificare
+              </Link>
+            </div>
+          </form>
+        </div>
       )}
     </div>
   );

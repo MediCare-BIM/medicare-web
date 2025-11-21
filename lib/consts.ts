@@ -2,6 +2,6 @@
 export const REDIRECT_AFTER_LOGIN = '/dashboard';
 
 // app settings
-export const APP_NAME = 'Medicare';
+export const APP_NAME = 'MediCare';
 export const APP_DESCRIPTION =
-  'Medicare is a platform for managing medical records';
+  'MediCare este o platformă pentru gestionarea dosarelor medicale';
