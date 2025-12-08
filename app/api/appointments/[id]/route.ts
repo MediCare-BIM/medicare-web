@@ -1,12 +1,12 @@
 import { createClient } from '@/lib/supabase/server';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { Enums } from '@/lib/database.types';
 
 export async function PATCH(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
+  const { id } = await context.params;
   const { status }: { status: Enums<'appointment_status'> } = await request.json();
 
   if (!['confirmed', 'cancelled', 'completed'].includes(status)) {
@@ -40,10 +40,10 @@ export async function PATCH(
     });
   } else if (status === 'confirmed') {
     await supabase.from('notifications').insert({
-        doctor_id: user.id,
-        appointment_id: appointment.id,
-        type: 'updated',
-      });
+      doctor_id: user.id,
+      appointment_id: appointment.id,
+      type: 'updated',
+    });
   }
 
   return NextResponse.json(appointment);
