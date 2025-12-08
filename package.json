@@ -4,7 +4,9 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "gen:types": "supabase gen types typescript --project-id qggaetvrfdqazgmyqgxi > lib/database.types.ts",
+    "seed": "node seed.mjs"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -29,6 +31,7 @@
     "@tanstack/react-table": "^8.21.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "dotenv": "^17.2.3",
     "embla-carousel-react": "^8.6.0",
     "lucide-react": "^0.511.0",
     "next": "latest",
@@ -37,6 +40,7 @@
     "react-dom": "^19.0.0",
     "recharts": "^2.15.4",
     "sonner": "^2.0.7",
+    "swr": "^2.3.7",
     "tailwind-merge": "^3.3.0",
     "vaul": "^1.1.2",
     "zod": "^4.1.12"
@@ -50,6 +54,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.3.1",
     "postcss": "^8",
+    "supabase": "^2.58.5",
     "tailwindcss": "^4.1.17",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5"
