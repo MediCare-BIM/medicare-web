@@ -2,24 +2,15 @@
 
 import * as React from 'react';
 import {
-  IconCamera,
-  IconChartBar,
-  IconDashboard,
-  IconDatabase,
-  IconFileAi,
-  IconFileDescription,
-  IconFileWord,
-  IconFolder,
+  IconCalendar,
   IconHelp,
   IconInnerShadowTop,
-  IconListDetails,
+  IconLayoutDashboard,
   IconReport,
-  IconSearch,
   IconSettings,
   IconUsers,
 } from '@tabler/icons-react';
 
-import { NavDocuments } from '@/components/nav-documents';
 import { NavMain } from '@/components/nav-main';
 import { NavSecondary } from '@/components/nav-secondary';
 import { NavUser } from '@/components/nav-user';
@@ -33,115 +24,43 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { APP_NAME } from '@/lib/consts';
+import { NavDocuments } from './nav-documents';
 
 const data = {
   navMain: [
     {
       title: 'Dashboard',
-      url: '#',
-      icon: IconDashboard,
+      url: 'dashboard',
+      icon: IconLayoutDashboard,
     },
     {
-      title: 'Lifecycle',
-      url: '#',
-      icon: IconListDetails,
-    },
-    {
-      title: 'Analytics',
-      url: '#',
-      icon: IconChartBar,
-    },
-    {
-      title: 'Projects',
-      url: '#',
-      icon: IconFolder,
-    },
-    {
-      title: 'Team',
-      url: '#',
+      title: 'Pacienti',
+      url: 'pacients',
       icon: IconUsers,
     },
-  ],
-  navClouds: [
     {
-      title: 'Capture',
-      icon: IconCamera,
-      isActive: true,
-      url: '#',
-      items: [
-        {
-          title: 'Active Proposals',
-          url: '#',
-        },
-        {
-          title: 'Archived',
-          url: '#',
-        },
-      ],
-    },
-    {
-      title: 'Proposal',
-      icon: IconFileDescription,
-      url: '#',
-      items: [
-        {
-          title: 'Active Proposals',
-          url: '#',
-        },
-        {
-          title: 'Archived',
-          url: '#',
-        },
-      ],
-    },
-    {
-      title: 'Prompts',
-      icon: IconFileAi,
-      url: '#',
-      items: [
-        {
-          title: 'Active Proposals',
-          url: '#',
-        },
-        {
-          title: 'Archived',
-          url: '#',
-        },
-      ],
+      title: 'Calendar',
+      url: 'calendar',
+      icon: IconCalendar,
     },
   ],
   navSecondary: [
     {
-      title: 'Settings',
+      title: 'Setări',
       url: '#',
       icon: IconSettings,
     },
     {
-      title: 'Get Help',
+      title: 'Suport',
       url: '#',
       icon: IconHelp,
-    },
-    {
-      title: 'Search',
-      url: '#',
-      icon: IconSearch,
     },
   ],
   documents: [
     {
-      name: 'Data Library',
-      url: '#',
-      icon: IconDatabase,
-    },
-    {
-      name: 'Reports',
-      url: '#',
+      name: 'Rapoarte',
+      url: 'reports',
       icon: IconReport,
-    },
-    {
-      name: 'Word Assistant',
-      url: '#',
-      icon: IconFileWord,
     },
   ],
 };
