@@ -25,6 +25,7 @@ import {
 } from '@/components/ui/sidebar';
 import { APP_NAME } from '@/lib/consts';
 import { NavDocuments } from './nav-documents';
+import { User } from '@supabase/supabase-js';
 
 const data = {
   navMain: [
@@ -69,12 +70,15 @@ export function AppSidebar({
   user,
   ...props
 }: React.ComponentProps<typeof Sidebar> & {
-  user: {
-    name: string;
-    email: string;
-    avatar: string;
-  } | null;
+  user: User | null;
 }) {
+  const navUser = user
+    ? {
+        name: user.user_metadata.name || user.email || '',
+        email: user.email || '',
+        avatar: user.user_metadata.avatar_url || '',
+      }
+    : null;
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -97,7 +101,7 @@ export function AppSidebar({
         <NavDocuments items={data.documents} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
-      <SidebarFooter>{user && <NavUser user={user} />}</SidebarFooter>
+      <SidebarFooter>{navUser && <NavUser user={navUser} />}</SidebarFooter>
     </Sidebar>
   );
 }
