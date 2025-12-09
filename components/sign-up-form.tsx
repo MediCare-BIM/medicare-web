@@ -48,6 +48,7 @@ export function SignUpForm({
           emailRedirectTo: `${window.location.origin}/${REDIRECT_AFTER_LOGIN}`,
           data: {
             full_name: fullName,
+            app_source: 'doctor_app',
           },
         },
       });
