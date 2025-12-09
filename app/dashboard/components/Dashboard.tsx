@@ -1,3 +1,5 @@
+'use client';
+
 import { Download, Search } from 'lucide-react';
 import { SummaryCards } from './SummaryCards';
 import { PatientsTable } from './PatientsTable';
@@ -18,19 +20,41 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { priorityOptions, statusOptions } from '@/lib/consts';
-import { AppointmentWithProfiles } from '@/lib/types';
+import { AppointmentWithProfiles, DailyAppointmentStats } from '@/lib/types';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState, useEffect } from 'react';
 
 type DashboardProps = {
   appointments: AppointmentWithProfiles[];
-  summaryData: unknown[];
+  stats: DailyAppointmentStats;
   todayString: string;
 };
 
 export function Dashboard({
   appointments,
-  summaryData,
+  stats,
   todayString,
 }: DashboardProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    setSearchTerm(searchParams.get('search') || '');
+  }, [searchParams]);
+
+  const handleSearch = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      const params = new URLSearchParams(searchParams);
+      if (searchTerm) {
+        params.set('search', searchTerm);
+      } else {
+        params.delete('search');
+      }
+      router.push(`?${params.toString()}`);
+    }
+  };
+
   return (
     <main>
       <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
@@ -46,7 +70,7 @@ export function Dashboard({
           </div>
         </div>
 
-        <SummaryCards summaryData={summaryData} />
+        <SummaryCards stats={stats} />
 
         <Card>
           <CardHeader>
@@ -63,6 +87,9 @@ export function Dashboard({
                 <Input
                   placeholder="Caută pacient..."
                   className="pl-8 sm:w-64"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onKeyDown={handleSearch}
                 />
               </div>
 

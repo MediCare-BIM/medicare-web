@@ -103,7 +103,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      get_daily_appointment_average: { Args: never; Returns: number }
+      get_daily_appointment_stats: {
+        Args: never
+        Returns: {
+          daily_average: number
+          high_priority_today: number
+          total_today: number
+        }[]
+      }
       is_doctor: { Args: { profile_id: string }; Returns: boolean }
       is_patient: { Args: { profile_id: string }; Returns: boolean }
     }
