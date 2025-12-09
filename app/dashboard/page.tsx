@@ -1,5 +1,5 @@
 import { AlertTriangle, BarChart2, User } from 'lucide-react';
-import { AppointmentWithPatient, SummaryData } from '@/lib/types';
+import { AppointmentWithProfiles } from '@/lib/types';
 import { createClient } from '@/lib/supabase/client';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/app-sidebar';
@@ -14,29 +14,23 @@ async function getDashboardData() {
   const todayEnd = new Date(today.setHours(23, 59, 59, 999)).toISOString();
 
   // Fetch data in parallel
-  const [appointmentsData, highPriorityData, dailyAvgData] = await Promise.all([
+  const [appointmentsData, summaryStatsData] = await Promise.all([
     supabase
       .from('appointments')
-      .select('*, patients(full_name, avatar_url)')
+      .select(
+        '*, doctor_profile:profiles!doctor_id(full_name, avatar_url), patient_profile:profiles!patient_id(full_name, avatar_url)'
+      )
       .gte('appointment_date', todayStart)
       .lte('appointment_date', todayEnd)
       .order('appointment_date', { ascending: true }),
-    supabase
-      .from('appointments')
-      .select('id', { count: 'exact' })
-      .eq('priority', 'High')
-      .gte('appointment_date', todayStart)
-      .lte('appointment_date', todayEnd),
-    supabase.rpc('get_daily_appointment_average'),
+    supabase.rpc('get_daily_appointment_stats'),
   ]);
 
   const { data: appointments, error: appointmentsError } = appointmentsData;
-  const { count: highPriorityCount, error: highPriorityError } =
-    highPriorityData;
-  const { data: dailyAvg, error: dailyAvgError } = dailyAvgData;
+  const { data: summaryStats, error: summaryStatsError } = summaryStatsData;
 
-  if (appointmentsError || highPriorityError || dailyAvgError) {
-    console.error({ appointmentsError, highPriorityError, dailyAvgError });
+  if (appointmentsError || summaryStatsError) {
+    console.error({ appointmentsError, summaryStatsError });
     return {
       appointments: [],
       summaryData: [],
@@ -44,28 +38,37 @@ async function getDashboardData() {
     };
   }
 
-  const summaryData: SummaryData[] = [
+  const stats =
+    summaryStats && summaryStats.length > 0
+      ? summaryStats[0]
+      : {
+          total_today: 0,
+          high_priority_today: 0,
+          daily_average: 0,
+        };
+
+  const summaryData = [
     {
       title: 'Pacienți astăzi',
-      value: (appointments?.length ?? 0).toString(),
+      value: (stats.total_today ?? 0).toString(),
       percentageChange: '+5%', // Dummy value
       icon: User,
     },
     {
       title: 'Prioritate ridicată',
-      value: (highPriorityCount ?? 0).toString(),
+      value: (stats.high_priority_today ?? 0).toString(),
       percentageChange: '-2%', // Dummy value
       icon: AlertTriangle,
     },
     {
       title: 'Media zilnică',
-      value: dailyAvg ? dailyAvg.toFixed(1) : '0.0',
+      value: stats.daily_average ? stats.daily_average.toFixed(1) : '0.0',
       percentageChange: '', // Not applicable
       icon: BarChart2,
     },
   ];
 
-  return { appointments, summaryData, error: null };
+  return { appointments: appointments ?? [], summaryData, error: null };
 }
 
 export default async function DashboardPage() {
@@ -100,7 +103,7 @@ export default async function DashboardPage() {
       <SidebarInset>
         <SiteHeader />
         <Dashboard
-          appointments={appointments as AppointmentWithPatient[]}
+          appointments={appointments as AppointmentWithProfiles[]}
           summaryData={summaryData}
           todayString={todayString}
         />

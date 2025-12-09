@@ -1,16 +1,9 @@
-
 import { Database } from "./database.types";
 
 export type Appointment = Database["public"]["Tables"]["appointments"]["Row"];
-export type Patient = Database["public"]["Tables"]["patients"]["Row"];
+export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
-export type AppointmentWithPatient = Appointment & {
-  patients: Pick<Patient, "name" | "avatar_url"> | null;
-};
-
-export type SummaryData = {
-  title: string;
-  value: string;
-  percentageChange: string;
-  icon: React.ComponentType<any>;
+export type AppointmentWithProfiles = Appointment & {
+  doctor_profile: Pick<Profile, "full_name" | "avatar_url"> | null;
+  patient_profile: Pick<Profile, "full_name" | "avatar_url"> | null;
 };

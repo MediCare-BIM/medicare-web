@@ -17,12 +17,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { priorityOptions, statusOptions } from '@/lib/dummy-data';
-import { AppointmentWithPatient, SummaryData } from '@/lib/types';
+import { priorityOptions, statusOptions } from '@/lib/consts';
+import { AppointmentWithProfiles } from '@/lib/types';
 
 type DashboardProps = {
-  appointments: AppointmentWithPatient[];
-  summaryData: SummaryData[];
+  appointments: AppointmentWithProfiles[];
+  summaryData: unknown[];
   todayString: string;
 };
 
@@ -101,9 +101,7 @@ export function Dashboard({
             </div>
 
             <div className="rounded-md border">
-              <PatientsTable
-                appointments={appointments as AppointmentWithPatient[]}
-              />
+              <PatientsTable appointments={appointments} />
             </div>
 
             <div className="mt-4 flex items-center justify-end space-x-2">

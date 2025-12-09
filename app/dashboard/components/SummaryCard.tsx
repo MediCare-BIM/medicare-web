@@ -5,10 +5,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { SummaryData } from "@/lib/types";
 
 type SummaryCardProps = {
-  data: SummaryData;
+  data: any;
 };
 
 export function SummaryCard({ data }: SummaryCardProps) {

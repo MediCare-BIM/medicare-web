@@ -21,6 +21,7 @@ DROP TABLE IF EXISTS appointments CASCADE;
 DROP TABLE IF EXISTS profiles CASCADE;
 DROP TYPE IF EXISTS user_role CASCADE;
 DROP TYPE IF EXISTS appointment_status CASCADE;
+DROP TYPE IF EXISTS appointment_priority CASCADE;
 DROP FUNCTION IF EXISTS is_doctor(UUID) CASCADE;
 DROP FUNCTION IF EXISTS is_patient(UUID) CASCADE;
 DROP FUNCTION IF EXISTS update_updated_at_column() CASCADE;
@@ -30,6 +31,7 @@ DROP FUNCTION IF EXISTS update_updated_at_column() CASCADE;
 -- -------------------
 CREATE TYPE user_role AS ENUM ('doctor', 'patient');
 CREATE TYPE appointment_status AS ENUM ('pending', 'confirmed', 'cancelled', 'completed');
+CREATE TYPE appointment_priority AS ENUM ('Low', 'Medium', 'High');
 
 
 -- 3. Create Profiles Table
@@ -80,6 +82,7 @@ CREATE TABLE appointments (
     patient_id UUID NOT NULL REFERENCES profiles(id),
     appointment_date TIMESTAMPTZ NOT NULL,
     status appointment_status NOT NULL DEFAULT 'pending',
+    priority appointment_priority NOT NULL DEFAULT 'Low',
     reason TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),

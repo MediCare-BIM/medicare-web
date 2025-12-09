@@ -1,4 +1,3 @@
-
 import {
   Table,
   TableBody,
@@ -6,16 +5,16 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { AppointmentWithPatient } from "@/lib/types";
-import { PriorityBadge } from "./PriorityBadge";
-import { StatusBadge } from "./StatusBadge";
-import { Eye } from "lucide-react";
+} from '@/components/ui/table';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { AppointmentWithProfiles } from '@/lib/types';
+import { PriorityBadge } from './PriorityBadge';
+import { StatusBadge } from './StatusBadge';
+import { Eye } from 'lucide-react';
 
 type PatientsTableProps = {
-  appointments: AppointmentWithPatient[];
+  appointments: AppointmentWithProfiles[];
 };
 
 export function PatientsTable({ appointments }: PatientsTableProps) {
@@ -38,22 +37,22 @@ export function PatientsTable({ appointments }: PatientsTableProps) {
               <div className="flex items-center gap-3">
                 <Avatar className="h-8 w-8">
                   <AvatarImage
-                    src={appointment.patients?.avatar_url ?? undefined}
-                    alt={appointment.patients?.full_name ?? "N/A"}
+                    src={appointment.patient_profile?.avatar_url ?? undefined}
+                    alt={appointment.patient_profile?.full_name ?? 'N/A'}
                   />
                   <AvatarFallback>
-                    {appointment.patients?.full_name?.charAt(0) ?? "N"}
+                    {appointment.patient_profile?.full_name?.charAt(0) ?? 'N'}
                   </AvatarFallback>
                 </Avatar>
                 <span className="font-medium">
-                  {appointment.patients?.full_name ?? "N/A"}
+                  {appointment.patient_profile?.full_name ?? 'N/A'}
                 </span>
               </div>
             </TableCell>
             <TableCell>
               {new Date(appointment.appointment_date).toLocaleTimeString(
-                "ro-RO",
-                { hour: "2-digit", minute: "2-digit" }
+                'ro-RO',
+                { hour: '2-digit', minute: '2-digit' }
               )}
             </TableCell>
             <TableCell>
@@ -61,7 +60,7 @@ export function PatientsTable({ appointments }: PatientsTableProps) {
             </TableCell>
             <TableCell>{appointment.reason}</TableCell>
             <TableCell>
-              <StatusBadge status={appointment.status as any} />
+              <StatusBadge status={appointment.status} />
             </TableCell>
             <TableCell className="text-right">
               <Button variant="ghost" size="icon">

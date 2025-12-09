@@ -1,9 +1,8 @@
 
-import { SummaryData } from "@/lib/types";
 import { SummaryCard } from "./SummaryCard";
 
 type SummaryCardsProps = {
-  summaryData: SummaryData[];
+  summaryData: any[];
 };
 
 export function SummaryCards({ summaryData }: SummaryCardsProps) {
