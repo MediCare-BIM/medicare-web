@@ -1,9 +1,22 @@
 -- Function to create a profile for a new user
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
+DECLARE
+  user_role TEXT;
 BEGIN
+  -- Determine role based on app_source from user metadata
+  IF NEW.raw_user_meta_data->>'app_source' = 'doctor_app' THEN
+    user_role := 'doctor';
+  ELSE
+    user_role := 'patient';
+  END IF;
+
   INSERT INTO public.profiles (id, full_name, role)
-  VALUES (NEW.id, COALESCE(NEW.raw_user_meta_data->>'full_name', 'New Doctor'), 'doctor');
+  VALUES (
+    NEW.id,
+    COALESCE(NEW.raw_user_meta_data->>'full_name', 'New ' || user_role),
+    user_role::user_role -- Cast to the enum type
+  );
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
