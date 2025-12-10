@@ -9,14 +9,14 @@ export const APP_DESCRIPTION =
 import { Option } from './types';
 
 export const priorityOptions: Option[] = [
-  { label: 'Toate', value: 'Toate' },
+  { label: 'Toate Prioritățile', value: 'Toate' },
   { label: 'Înaltă', value: 'High' },
   { label: 'Medie', value: 'Medium' },
   { label: 'Scăzută', value: 'Low' },
 ];
 
 export const statusOptions: Option[] = [
-  { label: 'Toate', value: 'Toate' },
+  { label: 'Toate Statusurile', value: 'Toate' },
   { label: 'Finalizat', value: 'completed' },
   { label: 'Programat', value: 'confirmed' },
   { label: 'În curs', value: 'pending' },

@@ -1,5 +1,5 @@
 import { AppointmentWithProfiles, DailyAppointmentStats } from '@/lib/types';
-import { createClient } from '@/lib/supabase/client';
+import { createClient } from '@/lib/supabase/server';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/app-sidebar';
 import { SiteHeader } from '@/components/site-header';
@@ -10,7 +10,7 @@ async function getDashboardData(filters: {
   priority?: string;
   status?: string;
 }) {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { search, priority, status } = filters;
 
@@ -87,7 +87,7 @@ export default async function DashboardPage({
 }: {
   searchParams: { [key: string]: string | undefined };
 }) {
-  const supabase = createClient();
+  const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();

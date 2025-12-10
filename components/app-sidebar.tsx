@@ -31,36 +31,36 @@ const data = {
   navMain: [
     {
       title: 'Dashboard',
-      url: 'dashboard',
+      url: '/dashboard',
       icon: IconLayoutDashboard,
     },
     {
       title: 'Pacienti',
-      url: 'pacients',
+      url: '/pacients',
       icon: IconUsers,
     },
     {
       title: 'Calendar',
-      url: 'calendar',
+      url: '/calendar',
       icon: IconCalendar,
     },
   ],
   navSecondary: [
     {
       title: 'Setări',
-      url: '#',
+      url: '/settings',
       icon: IconSettings,
     },
     {
       title: 'Suport',
-      url: '#',
+      url: '/support',
       icon: IconHelp,
     },
   ],
   documents: [
     {
       name: 'Rapoarte',
-      url: 'reports',
+      url: '/reports',
       icon: IconReport,
     },
   ],
@@ -79,6 +79,7 @@ export function AppSidebar({
         avatar: user.user_metadata.avatar_url || '',
       }
     : null;
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>

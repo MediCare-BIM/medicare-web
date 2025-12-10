@@ -7,6 +7,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import { usePathname } from 'next/navigation';
 
 export function NavDocuments({
   items,
@@ -17,20 +18,24 @@ export function NavDocuments({
     icon: Icon;
   }[];
 }) {
+  const pathname = usePathname();
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <SidebarGroupLabel>Documentatie</SidebarGroupLabel>
       <SidebarMenu>
-        {items.map((item) => (
-          <SidebarMenuItem key={item.name}>
-            <SidebarMenuButton asChild>
-              <a href={item.url}>
-                <item.icon />
-                <span>{item.name}</span>
-              </a>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        ))}
+        {items.map((item) => {
+          const isActive = pathname === item.url;
+          return (
+            <SidebarMenuItem key={item.name}>
+              <SidebarMenuButton asChild isActive={isActive}>
+                <a href={item.url}>
+                  <item.icon />
+                  <span>{item.name}</span>
+                </a>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          );
+        })}
         <SidebarMenuItem>
           <SidebarMenuButton className="text-sidebar-foreground/70">
             <IconDots className="text-sidebar-foreground/70" />
