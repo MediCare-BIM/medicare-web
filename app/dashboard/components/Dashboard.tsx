@@ -22,7 +22,7 @@ import {
 import { priorityOptions, statusOptions } from '@/lib/consts';
 import { AppointmentWithProfiles, DailyAppointmentStats } from '@/lib/types';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useCallback } from 'react';
 
 type DashboardProps = {
   appointments: AppointmentWithProfiles[];
@@ -37,21 +37,27 @@ export function Dashboard({
 }: DashboardProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [searchTerm, setSearchTerm] = useState('');
 
-  useEffect(() => {
-    setSearchTerm(searchParams.get('search') || '');
-  }, [searchParams]);
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (value && value !== 'Toate') {
+        params.set(name, value);
+      } else {
+        params.delete(name);
+      }
+      return params.toString();
+    },
+    [searchParams]
+  );
+
+  const handleFilterChange = (name: string, value: string) => {
+    router.push(`?${createQueryString(name, value)}`);
+  };
 
   const handleSearch = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      const params = new URLSearchParams(searchParams);
-      if (searchTerm) {
-        params.set('search', searchTerm);
-      } else {
-        params.delete('search');
-      }
-      router.push(`?${params.toString()}`);
+      handleFilterChange('search', event.currentTarget.value);
     }
   };
 
@@ -63,7 +69,6 @@ export function Dashboard({
             <h2 className="text-3xl font-bold tracking-tight">
               Bună ziua, Doctore! 👋
             </h2>
-
             <p className="text-muted-foreground">
               Iată ce se întâmplă astăzi, {todayString}.
             </p>
@@ -87,34 +92,39 @@ export function Dashboard({
                 <Input
                   placeholder="Caută pacient..."
                   className="pl-8 sm:w-64"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  defaultValue={searchParams.get('search') || ''}
                   onKeyDown={handleSearch}
                 />
               </div>
 
               <div className="flex w-full items-center gap-2 sm:w-auto sm:justify-end">
-                <Select defaultValue="Toate">
+                <Select
+                  value={searchParams.get('priority') || 'Toate'}
+                  onValueChange={(value) => handleFilterChange('priority', value)}
+                >
                   <SelectTrigger className="w-full sm:w-[160px]">
                     <SelectValue placeholder="Prioritate" />
                   </SelectTrigger>
                   <SelectContent>
                     {priorityOptions.map((opt) => (
-                      <SelectItem key={opt} value={opt}>
-                        {opt}
+                      <SelectItem key={opt.value} value={opt.value}>
+                        {opt.label}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
 
-                <Select defaultValue="Toate">
+                <Select
+                  value={searchParams.get('status') || 'Toate'}
+                  onValueChange={(value) => handleFilterChange('status', value)}
+                >
                   <SelectTrigger className="w-full sm:w-[160px]">
                     <SelectValue placeholder="Status" />
                   </SelectTrigger>
                   <SelectContent>
                     {statusOptions.map((opt) => (
-                      <SelectItem key={opt} value={opt}>
-                        {opt}
+                      <SelectItem key={opt.value} value={opt.value}>
+                        {opt.label}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -148,3 +158,4 @@ export function Dashboard({
     </main>
   );
 }
+

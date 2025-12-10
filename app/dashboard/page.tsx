@@ -5,8 +5,14 @@ import { AppSidebar } from '@/components/app-sidebar';
 import { SiteHeader } from '@/components/site-header';
 import { Dashboard } from './components/Dashboard';
 
-async function getDashboardData(searchTerm?: string) {
+async function getDashboardData(filters: {
+  search?: string;
+  priority?: string;
+  status?: string;
+}) {
   const supabase = createClient();
+
+  const { search, priority, status } = filters;
 
   const today = new Date();
   const todayStart = new Date(today.setHours(0, 0, 0, 0)).toISOString();
@@ -25,14 +31,24 @@ async function getDashboardData(searchTerm?: string) {
     });
 
   // Apply search filter if searchTerm is provided
-  if (searchTerm) {
+  if (search) {
     const { data: profiles } = await supabase
       .from('profiles')
       .select('id')
-      .ilike('full_name', `%${searchTerm}%`);
+      .ilike('full_name', `%${search}%`);
 
     const patientIds = profiles?.map((p) => p.id) || [];
     appointmentsQuery = appointmentsQuery.in('patient_id', patientIds);
+  }
+
+  // Apply priority filter
+  if (priority && priority !== 'Toate') {
+    appointmentsQuery = appointmentsQuery.eq('priority', priority);
+  }
+
+  // Apply status filter
+  if (status && status !== 'Toate') {
+    appointmentsQuery = appointmentsQuery.eq('status', status);
   }
 
   // Fetch data in parallel
@@ -76,8 +92,12 @@ export default async function DashboardPage({
     data: { user },
   } = await supabase.auth.getUser();
 
-  const searchTerm = (await searchParams).search;
-  const { appointments, stats, error } = await getDashboardData(searchTerm);
+  const { search, priority, status } = await searchParams;
+  const { appointments, stats, error } = await getDashboardData({
+    search,
+    priority,
+    status,
+  });
 
   if (error) {
     return <div className="p-4">{error}</div>;
