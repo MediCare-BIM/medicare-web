@@ -1,7 +1,6 @@
 'use client';
 
 import { Download, Search } from 'lucide-react';
-import { SummaryCards } from './SummaryCards';
 import { PatientsTable } from './PatientsTable';
 import {
   Card,
@@ -19,20 +18,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { priorityOptions, statusOptions } from '@/lib/consts';
-import { AppointmentWithProfiles, DailyAppointmentStats } from '@/lib/types';
+import { statusOptions } from '@/lib/consts';
+import { AppointmentWithDoctorAndPatient } from '@/lib/types';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback } from 'react';
 
 type DashboardProps = {
-  appointments: AppointmentWithProfiles[];
-  stats: DailyAppointmentStats;
+  appointments: AppointmentWithDoctorAndPatient[];
   todayString: string;
 };
 
 export function Dashboard({
   appointments,
-  stats,
   todayString,
 }: DashboardProps) {
   const router = useRouter();
@@ -75,8 +72,6 @@ export function Dashboard({
           </div>
         </div>
 
-        <SummaryCards stats={stats} />
-
         <Card>
           <CardHeader>
             <CardTitle>Pacienții de astăzi</CardTitle>
@@ -98,22 +93,6 @@ export function Dashboard({
               </div>
 
               <div className="flex w-full items-center gap-2 sm:w-auto sm:justify-end">
-                <Select
-                  value={searchParams.get('priority') || 'Toate'}
-                  onValueChange={(value) => handleFilterChange('priority', value)}
-                >
-                  <SelectTrigger className="w-full sm:w-[160px]">
-                    <SelectValue placeholder="Prioritate" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {priorityOptions.map((opt) => (
-                      <SelectItem key={opt.value} value={opt.value}>
-                        {opt.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
                 <Select
                   value={searchParams.get('status') || 'Toate'}
                   onValueChange={(value) => handleFilterChange('status', value)}

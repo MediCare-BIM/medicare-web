@@ -1,13 +1,15 @@
 import { Database } from "./database.types";
 
 export type Appointment = Database["public"]["Tables"]["appointments"]["Row"];
-export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
+export type UserProfile = Database["public"]["Tables"]["users_profile"]["Row"];
+export type Doctor = Database["public"]["Tables"]["doctors"]["Row"];
+export type Patient = Database["public"]["Tables"]["patients"]["Row"];
 
-export type AppointmentWithProfiles = Appointment & {
-  doctor_profile: Pick<Profile, "full_name" | "avatar_url"> | null;
-  patient_profile: Pick<Profile, "full_name" | "avatar_url"> | null;
+export type AppointmentWithDoctorAndPatient = Appointment & {
+  doctor: Pick<Doctor, "full_name"> | null;
+  patient: Pick<Patient, "full_name"> | null;
 };
-export type DailyAppointmentStats = Database["public"]["Functions"]["get_daily_appointment_stats"]["Returns"][0];
+
 export type Option = {
   label: string;
   value: string;

@@ -1,4 +1,4 @@
-import { AppointmentWithProfiles, DailyAppointmentStats } from '@/lib/types';
+import { AppointmentWithDoctorAndPatient } from '@/lib/types';
 import { createClient } from '@/lib/supabase/server';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/app-sidebar';
@@ -7,12 +7,11 @@ import { Dashboard } from './components/Dashboard';
 
 async function getDashboardData(filters: {
   search?: string;
-  priority?: string;
   status?: string;
 }) {
   const supabase = await createClient();
 
-  const { search, priority, status } = filters;
+  const { search, status } = filters;
 
   const today = new Date();
   const todayStart = new Date(today.setHours(0, 0, 0, 0)).toISOString();
@@ -22,28 +21,23 @@ async function getDashboardData(filters: {
   let appointmentsQuery = supabase
     .from('appointments')
     .select(
-      '*, doctor_profile:profiles!doctor_id(full_name, avatar_url), patient_profile:profiles!patient_id(full_name, avatar_url)'
+      '*, doctor:doctors(full_name), patient:patients(full_name)'
     )
-    .gte('appointment_date', todayStart)
-    .lte('appointment_date', todayEnd)
-    .order('appointment_date', {
+    .gte('start_time', todayStart)
+    .lte('start_time', todayEnd)
+    .order('start_time', {
       ascending: true,
     });
 
   // Apply search filter if searchTerm is provided
   if (search) {
-    const { data: profiles } = await supabase
-      .from('profiles')
+    const { data: patients } = await supabase
+      .from('patients')
       .select('id')
       .ilike('full_name', `%${search}%`);
 
-    const patientIds = profiles?.map((p) => p.id) || [];
+    const patientIds = patients?.map((p) => p.id) || [];
     appointmentsQuery = appointmentsQuery.in('patient_id', patientIds);
-  }
-
-  // Apply priority filter
-  if (priority && priority !== 'Toate') {
-    appointmentsQuery = appointmentsQuery.eq('priority', priority);
   }
 
   // Apply status filter
@@ -51,33 +45,19 @@ async function getDashboardData(filters: {
     appointmentsQuery = appointmentsQuery.eq('status', status);
   }
 
-  // Fetch data in parallel
-  const [appointmentsData, summaryStatsData] = await Promise.all([
-    appointmentsQuery,
-    supabase.rpc('get_daily_appointment_stats'),
-  ]);
+  // Fetch data
+  const { data: appointments, error: appointmentsError } = await appointmentsQuery;
 
-  const { data: appointments, error: appointmentsError } = appointmentsData;
-  const { data: summaryStats, error: summaryStatsError } = summaryStatsData;
-
-  if (appointmentsError || summaryStatsError) {
-    console.error({ appointmentsError, summaryStatsError });
+  if (appointmentsError) {
+    console.error({ appointmentsError });
     return {
       appointments: [],
-      stats: { total_today: 0, high_priority_today: 0, daily_average: 0 },
       error: 'Failed to fetch data.',
     };
   }
 
-  const stats: DailyAppointmentStats = summaryStats[0] ?? {
-    daily_average: 0,
-    total_today: 0,
-    high_priority_today: 0,
-  };
-
   return {
     appointments: appointments ?? [],
-    stats,
     error: null,
   };
 }
@@ -92,10 +72,9 @@ export default async function DashboardPage({
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { search, priority, status } = await searchParams;
-  const { appointments, stats, error } = await getDashboardData({
+  const { search, status } = await searchParams;
+  const { appointments, error } = await getDashboardData({
     search,
-    priority,
     status,
   });
 
@@ -123,8 +102,7 @@ export default async function DashboardPage({
       <SidebarInset>
         <SiteHeader />
         <Dashboard
-          appointments={appointments as AppointmentWithProfiles[]}
-          stats={stats}
+          appointments={appointments as AppointmentWithDoctorAndPatient[]}
           todayString={todayString}
         />
       </SidebarInset>
