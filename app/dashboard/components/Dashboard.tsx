@@ -28,10 +28,7 @@ type DashboardProps = {
   todayString: string;
 };
 
-export function Dashboard({
-  appointments,
-  todayString,
-}: DashboardProps) {
+export function Dashboard({ appointments, todayString }: DashboardProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -137,4 +134,3 @@ export function Dashboard({
     </main>
   );
 }
-

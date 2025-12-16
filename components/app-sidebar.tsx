@@ -41,7 +41,7 @@ const data = {
     },
     {
       title: 'Calendar',
-      url: '/calendar',
+      url: '/dashboard/calendar',
       icon: IconCalendar,
     },
   ],

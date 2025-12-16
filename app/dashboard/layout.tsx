@@ -1,13 +1,38 @@
-import { checkAuth } from './check-auth';
+import { redirect } from 'next/navigation';
+
+import { AppSidebar } from '@/components/app-sidebar';
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
+import { SiteHeader } from '@/components/site-header';
+import { createClient } from '@/lib/supabase/server';
 
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  await checkAuth();
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return redirect('/auth/login');
+  }
 
   return (
-    <main className="min-h-screen flex flex-col items-center">{children}</main>
+    <SidebarProvider
+      style={
+        {
+          '--sidebar-width': 'calc(var(--spacing) * 72)',
+          '--header-height': 'calc(var(--spacing) * 12)',
+        } as React.CSSProperties
+      }
+    >
+      <AppSidebar variant="sidebar" user={user} />
+      <SidebarInset>
+        <SiteHeader />
+        {children}
+      </SidebarInset>
+    </SidebarProvider>
   );
 }

@@ -1,8 +1,5 @@
 import { AppointmentWithDoctorAndPatient } from '@/lib/types';
 import { createClient } from '@/lib/supabase/server';
-import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
-import { AppSidebar } from '@/components/app-sidebar';
-import { SiteHeader } from '@/components/site-header';
 import { Dashboard } from './components/Dashboard';
 
 async function getDashboardData(filters: {
@@ -67,11 +64,6 @@ export default async function DashboardPage({
 }: {
   searchParams: { [key: string]: string | undefined };
 }) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
   const { search, status } = await searchParams;
   const { appointments, error } = await getDashboardData({
     search,
@@ -90,22 +82,10 @@ export default async function DashboardPage({
   });
 
   return (
-    <SidebarProvider
-      style={
-        {
-          '--sidebar-width': 'calc(var(--spacing) * 72)',
-          '--header-height': 'calc(var(--spacing) * 12)',
-        } as React.CSSProperties
-      }
-    >
-      <AppSidebar variant="sidebar" user={user} />
-      <SidebarInset>
-        <SiteHeader />
-        <Dashboard
-          appointments={appointments as AppointmentWithDoctorAndPatient[]}
-          todayString={todayString}
-        />
-      </SidebarInset>
-    </SidebarProvider>
+    <Dashboard
+      appointments={appointments as AppointmentWithDoctorAndPatient[]}
+      todayString={todayString}
+    />
   );
 }
+
