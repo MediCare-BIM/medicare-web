@@ -2,26 +2,104 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ChevronLeft, ChevronRight, Search } from 'lucide-react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  Search,
+  Calendar as CalendarIcon,
+} from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { useDebouncedCallback } from 'use-debounce';
+import { getPeriodString } from '../lib/utils';
+import {
+  addMonths,
+  addWeeks,
+  addDays,
+  subMonths,
+  subWeeks,
+  subDays,
+} from 'date-fns';
 
-export function CalendarHeader() {
+export type View = 'dayGridMonth' | 'timeGridWeek' | 'timeGridDay';
+
+interface CalendarHeaderProps {
+  view: View;
+  date: Date;
+  onDateChange: (date: Date) => void;
+  onViewChange: (view: View) => void;
+  onSearch: (query: string) => void;
+}
+
+export function CalendarHeader({
+  view,
+  date,
+  onDateChange,
+  onViewChange,
+  onSearch,
+}: CalendarHeaderProps) {
+  const handleSearch = useDebouncedCallback((query: string) => {
+    onSearch(query);
+  }, 300);
+
+  const handlePrev = () => {
+    let newDate;
+    if (view === 'dayGridMonth') {
+      newDate = subMonths(date, 1);
+    } else if (view === 'timeGridWeek') {
+      newDate = subWeeks(date, 1);
+    } else {
+      newDate = subDays(date, 1);
+    }
+    onDateChange(newDate);
+  };
+
+  const handleNext = () => {
+    let newDate;
+    if (view === 'dayGridMonth') {
+      newDate = addMonths(date, 1);
+    } else if (view === 'timeGridWeek') {
+      newDate = addWeeks(date, 1);
+    } else {
+      newDate = addDays(date, 1);
+    }
+    onDateChange(newDate);
+  };
+
+  const handleToday = () => {
+    onDateChange(new Date());
+  };
+
   return (
     <div className="space-y-3 p-4">
       <h1 className="text-2xl font-semibold text-gray-800 mb-4">Calendar</h1>
       <div className="flex flex-col md:flex-row items-center justify-between gap-3 bg-background p-4 rounded-lg shadow-sm">
-        <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-          <div className="flex items-center space-x-1 border rounded-md p-1">
-            <span className="px-2 py-1 text-sm bg-blue-100 text-blue-800 rounded">
-              JAN
-            </span>
-            <span className="px-2 py-1 text-sm font-medium text-gray-700">
-              10
-            </span>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center space-x-1">
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-9 w-9"
+              onClick={handlePrev}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-9 w-9"
+              onClick={handleNext}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
           </div>
-          <div className="flex flex-col text-sm text-gray-600">
-            <span className="font-medium">ianuarie 2025 Săptămână 1</span>
-            <span>1 Ian, 2025 - 31 Ian, 2025</span>
-          </div>
+          <h2 className="text-lg font-semibold text-gray-700">
+            {getPeriodString(date, view)}
+          </h2>
         </div>
 
         <div className="flex flex-wrap gap-2 w-full md:w-auto md:justify-end justify-center">
@@ -29,30 +107,48 @@ export function CalendarHeader() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
               type="search"
-              placeholder="Caută programare"
+              placeholder="Search appointments..."
               className="pl-9 pr-3 py-2 border rounded-md w-full"
+              onChange={(e) => handleSearch(e.target.value)}
             />
-          </div>
-          <div className="flex items-center space-x-1">
-            <Button variant="outline" size="icon" className="h-9 w-9">
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <Button variant="outline" className="px-3 py-2 text-sm">
-              Astăzi
-            </Button>
-            <Button variant="outline" size="icon" className="h-9 w-9">
-              <ChevronRight className="h-4 w-4" />
-            </Button>
           </div>
           <Button
             variant="outline"
-            className="flex items-center space-x-1 px-3 py-2 text-sm"
+            className="px-3 py-2 text-sm"
+            onClick={handleToday}
           >
-            <span>Săptămână</span>
-            <ChevronLeft className="h-4 w-4 rotate-90" />
+            Today
           </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className="flex items-center space-x-1 px-3 py-2 text-sm"
+              >
+                <CalendarIcon className="h-4 w-4" />
+                <span>
+                  {view === 'dayGridMonth'
+                    ? 'Month'
+                    : view === 'timeGridWeek'
+                    ? 'Week'
+                    : 'Day'}
+                </span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem onClick={() => onViewChange('timeGridWeek')}>
+                Week
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onViewChange('dayGridMonth')}>
+                Month
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onViewChange('timeGridDay')}>
+                Day
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Button className="bg-blue-600 text-white hover:bg-blue-700 px-3 py-2 text-sm">
-            <span>+ Adaugă programare</span>
+            <span>+ Add Appointment</span>
           </Button>
         </div>
       </div>

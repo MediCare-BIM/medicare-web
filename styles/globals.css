@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @plugin 'tailwindcss-animate';
 
@@ -90,6 +90,9 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
+    --indigo-700: 244 58% 51%;
+    --indigo-600: 243 75% 59%;
+    --indigo-50: 228 100% 97%;
   }
   .dark {
     --background: 0 0% 3.9%;
@@ -117,6 +120,9 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+    --indigo-700: 244 58% 51%;
+    --indigo-600: 243 75% 59%;
+    --indigo-50: 228 100% 97%;
   }
 }
 
@@ -197,9 +203,13 @@
 }
 
 .fc-event {
-  @apply bg-blue-100 text-blue-800 rounded-lg border-blue-200;
+  background-color: hsl(var(--indigo-50));
+  border: 1px solid hsl(var(--indigo-600));
+  color: hsl(var(--indigo-700));
+  border-radius: 8px; /* Slightly more rounded corners */
   padding: 5px;
-  border: 1px solid;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* Subtle shadow */
 }
 
 .fc-event-main {
@@ -222,6 +232,18 @@
   @apply text-sm font-medium text-gray-600;
 }
 
+.day-of-month {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: hsl(var(--primary));
+  color: white;
+  margin-left: 4px;
+}
+
 .fc-timegrid-slot-label-cushion {
   @apply text-xs text-gray-500;
 }
@@ -230,7 +252,8 @@
   @apply h-full;
 }
 
-.fc-theme-standard td, .fc-theme-standard th {
+.fc-theme-standard td,
+.fc-theme-standard th {
   @apply border-gray-200;
 }
 

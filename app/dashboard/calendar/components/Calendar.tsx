@@ -1,120 +1,117 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import timeGridPlugin from "@fullcalendar/timegrid";
-import interactionPlugin from "@fullcalendar/interaction";
-import scrollGridPlugin from "@fullcalendar/scrollgrid"; // Import scrollGridPlugin
-import { EventClickArg } from "@fullcalendar/core";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useState, useRef, useMemo, useEffect } from 'react';
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import { EventClickArg } from '@fullcalendar/core';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { useAppointments } from '../hooks/useAppointments';
+import { transformAppointmentsToEvents } from '../lib/utils';
+import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from 'date-fns';
+import { View } from './CalendarHeader';
 
-export function FullCalendarScheduler() {
+interface CalendarProps {
+  view: View;
+  date: Date;
+  searchQuery: string;
+}
+
+export function Calendar({ view, date, searchQuery }: CalendarProps) {
+  const calendarRef = useRef<FullCalendar>(null);
   const [open, setOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<EventClickArg | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<EventClickArg | null>(
+    null
+  );
+
+  const dateRange = useMemo(() => {
+    const start =
+      view === 'dayGridMonth'
+        ? startOfMonth(date)
+        : startOfWeek(date, { weekStartsOn: 1 });
+    const end =
+      view === 'dayGridMonth'
+        ? endOfMonth(date)
+        : endOfWeek(date, { weekStartsOn: 1 });
+    return {
+      from: start.toISOString(),
+      to: end.toISOString(),
+    };
+  }, [date, view]);
+
+  const { data: appointments, isLoading, isError } = useAppointments(dateRange);
+
+  const filteredEvents = useMemo(() => {
+    if (!appointments) return [];
+    const events = transformAppointmentsToEvents(appointments as any);
+    if (!searchQuery) return events;
+    return events.filter((event) =>
+      event.extendedProps?.patientName
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase())
+    );
+  }, [appointments, searchQuery]);
+
+  useEffect(() => {
+    const calendarApi = calendarRef.current?.getApi();
+    if (calendarApi) {
+      calendarApi.gotoDate(date);
+    }
+  }, [date]);
+
+  useEffect(() => {
+    const calendarApi = calendarRef.current?.getApi();
+    if (calendarApi) {
+      calendarApi.changeView(view);
+    }
+  }, [view]);
 
   const handleEventClick = (clickInfo: EventClickArg) => {
     setSelectedEvent(clickInfo);
     setOpen(true);
   };
 
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error fetching appointments</div>;
+
   return (
     <>
       <FullCalendar
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, scrollGridPlugin]}
-        headerToolbar={{
-          left: "",
-          center: "",
-          right: "",
-        }}
+        ref={calendarRef}
+        plugins={[dayGridPlugin, timeGridPlugin]}
+        headerToolbar={false}
         initialView="timeGridWeek"
+        viewDidMount={(arg) => {
+          if (calendarRef.current) {
+            const calendarApi = calendarRef.current.getApi();
+            calendarApi.changeView(arg.view.type);
+          }
+        }}
         editable={true}
         selectable={true}
         selectMirror={true}
         dayMaxEvents={true}
         weekends={true}
-        events={[
-          {
-            title: "Consultație generală",
-            start: "2025-01-06T09:00:00",
-            end: "2025-01-06T10:00:00",
-            extendedProps: { patient: "Kianna Press" },
-          },
-          {
-            title: "Recomandare analize...",
-            start: "2025-01-07T10:00:00",
-            end: "2025-01-07T11:00:00",
-            extendedProps: { patient: "Marcus Gouse" },
-          },
-          {
-            title: "Interpretare analize d...",
-            start: "2025-01-08T09:00:00",
-            end: "2025-01-08T10:00:00",
-            extendedProps: { patient: "Omar Lubin" },
-          },
-          {
-            title: "ECG Tiroidă",
-            start: "2025-01-09T09:00:00",
-            end: "2025-01-09T10:00:00",
-            extendedProps: { patient: "" },
-          },
-          {
-            title: "Control diabet",
-            start: "2025-01-06T11:30:00",
-            end: "2025-01-06T12:30:00",
-            extendedProps: { patient: "Terry Kenter" },
-          },
-          {
-            title: "Recomandare analize...",
-            start: "2025-01-08T10:30:00",
-            end: "2025-01-08T11:30:00",
-            extendedProps: { patient: "Tiana Culhane" },
-          },
-          {
-            title: "ECG Tiroidă",
-            start: "2025-01-10T10:30:00",
-            end: "2025-01-10T11:30:00",
-            extendedProps: { patient: "Maren Lubin" },
-          },
-          {
-            title: "Recomandare analize...",
-            start: "2025-01-09T14:00:00",
-            end: "2025-01-09T15:00:00",
-            extendedProps: { patient: "Aspen Rhiel Madsen" },
-          },
-          {
-            title: "Control diabet",
-            start: "2025-01-10T11:30:00",
-            end: "2025-01-10T12:30:00",
-            extendedProps: { patient: "" },
-          },
-          {
-            title: "Consultație generală",
-            start: "2025-01-08T14:00:00",
-            end: "2025-01-08T15:00:00",
-            extendedProps: { patient: "Dulce Bator" },
-          },
-          {
-            title: "Control diabet",
-            start: "2025-01-07T15:00:00",
-            end: "2025-01-07T16:00:00",
-            extendedProps: { patient: "Angel Westervelt" },
-          },
-          {
-            title: "Recomandare analize...",
-            start: "2025-01-08T15:00:00",
-            end: "2025-01-08T16:00:00",
-            extendedProps: { patient: "Giana Culhane" },
-          },
-          {
-            title: "Consultație generală",
-            start: "2025-01-09T15:00:00",
-            end: "2025-01-09T16:00:00",
-            extendedProps: { patient: "Hanna Dorwart" },
-          },
-        ]}
+        events={filteredEvents}
         eventClick={handleEventClick}
-        height="auto" // This makes the calendar take the height of its parent
+        eventContent={(eventInfo) => (
+          <div className="flex flex-col h-full justify-between p-1">
+            <div className="text-xs font-semibold text-indigo-700">
+              {eventInfo.event.title}
+            </div>
+            {eventInfo.event.extendedProps.patientName && (
+              <div className="text-[11px] text-indigo-600">
+                {eventInfo.event.extendedProps.patientName}
+              </div>
+            )}
+          </div>
+        )}
+        height="auto"
       />
 
       <Dialog open={open} onOpenChange={setOpen}>
@@ -125,13 +122,20 @@ export function FullCalendarScheduler() {
           {selectedEvent && (
             <div>
               <p>
-                <strong>Patient:</strong>{" "}
-                {selectedEvent.event.extendedProps.patient}
+                <strong>Patient:</strong>{' '}
+                {selectedEvent.event.extendedProps.patientName}
               </p>
               <p>
-                <strong>Time:</strong>{" "}
-                {selectedEvent.event.start?.toLocaleTimeString()} -{" "}
-                {selectedEvent.event.end?.toLocaleTimeString()}
+                <strong>Time:</strong>{' '}
+                {selectedEvent.event.start?.toLocaleTimeString([], {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}{' '}
+                -{' '}
+                {selectedEvent.event.end?.toLocaleTimeString([], {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
               </p>
             </div>
           )}
