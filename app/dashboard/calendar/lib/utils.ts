@@ -1,19 +1,18 @@
-
-import { type Appointment } from './types'
 import { type EventInput } from '@fullcalendar/core'
 import { format, startOfWeek } from 'date-fns'
+import { AppointmentRow } from './requests';
 
 export const transformAppointmentsToEvents = (
-  appointments: Appointment[]
+  appointments: AppointmentRow[]
 ): EventInput[] => {
   return appointments.map((appointment) => ({
-    title: `${appointment.type} - ${appointment.patients.name}`,
-    start: `${appointment.date}T${appointment.start_time}`,
-    end: `${appointment.date}T${appointment.end_time}`,
+    title: `${appointment.reason}`,
+    start: `${appointment.start_time}`,
+    end: `${appointment.end_time}`,
     extendedProps: {
       appointmentId: appointment.id,
-      patientName: appointment.patients.name,
-      appointmentType: appointment.type,
+      patientName: appointment.patient_full_name,
+      appointmentType: "General",
     },
   }))
 }

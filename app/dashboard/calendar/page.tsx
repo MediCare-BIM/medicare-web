@@ -18,7 +18,7 @@ export default function CalendarPage() {
         onDateChange={setDate}
         onSearch={setSearchQuery}
       />
-      <div className="p-4">
+      <div className="h-full border-t-1">
         <Calendar view={view} date={date} searchQuery={searchQuery} />
       </div>
     </>

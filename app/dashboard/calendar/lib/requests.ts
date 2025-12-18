@@ -1,11 +1,12 @@
 
 import { SupabaseClient } from '@supabase/supabase-js'
 
-interface AppointmentRow {
+export interface AppointmentRow {
   id: string;
   doctor_id: string;
   patient_id: string;
-  appointment_date: string;
+  start_time: string;
+  end_time: string;
   status?: string;
   reason?: string;
   priority?: string;
@@ -24,6 +25,7 @@ export const getAppointments = async (
         doctor_id,
         patient_id,
         start_time,
+        end_time,
         status,
         reason,
         priority,
@@ -42,7 +44,8 @@ export const getAppointments = async (
     id: row.id,
     doctor_id: row.doctor_id,
     patient_id: row.patient_id,
-    appointment_date: row.start_time,
+    start_time: row.start_time,
+    end_time: row.end_time,
     status: row.status,
     reason: row.reason,
     priority: row.priority,
