@@ -11,6 +11,7 @@ import { ViewDay } from './ViewDay';
 import { useAppointments } from '../hooks/useAppointments';
 import { View } from './CalendarHeader';
 import { useDateRange } from '../hooks/useDateRange';
+import { format, isToday } from 'date-fns';
 import { useFilteredEvents } from '../hooks/useFilteredEvents';
 
 // Props
@@ -92,6 +93,21 @@ export function Calendar({ view, date, searchQuery }: CalendarProps) {
           events={filteredEvents}
           eventClick={handleEventClick}
           eventContent={AppointmentEventContent}
+          dayHeaderContent={(arg) => {
+            const dayOfMonth = format(arg.date, 'd');
+            const dayOfWeek = format(arg.date, 'E');
+            const today = isToday(arg.date);
+            return (
+              <div className="flex items-center justify-center gap-2 h-9">
+                <span>{dayOfWeek}</span>
+                {today ? (
+                  <span className="day-of-month">{dayOfMonth}</span>
+                ) : (
+                  <span>{dayOfMonth}</span>
+                )}
+              </div>
+            );
+          }}
           height="100%"
           slotMinTime="09:00:00"
           slotMaxTime="18:00:00"
