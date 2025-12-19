@@ -91,6 +91,7 @@ export type Database = {
           doctor_id: string
           end_time: string | null
           id: string
+          notes: string | null
           patient_id: string
           priority: string | null
           reason: string | null
@@ -102,6 +103,7 @@ export type Database = {
           doctor_id: string
           end_time?: string | null
           id?: string
+          notes?: string | null
           patient_id: string
           priority?: string | null
           reason?: string | null
@@ -113,6 +115,7 @@ export type Database = {
           doctor_id?: string
           end_time?: string | null
           id?: string
+          notes?: string | null
           patient_id?: string
           priority?: string | null
           reason?: string | null
