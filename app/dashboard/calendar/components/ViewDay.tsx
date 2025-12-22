@@ -82,6 +82,7 @@ const ViewDayContent = ({
   selectedEvent,
 }: Omit<ViewDayProps, 'isMobile' | 'onClose'>) => {
   const { event } = selectedEvent;
+
   const startDate = event.start
     ? format(event.start, 'eeee, MMM dd, yyyy')
     : '';
@@ -123,16 +124,21 @@ export function ViewDay({ selectedEvent, onClose, isMobile }: ViewDayProps) {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
-  const updateMutation = useUpdateAppointment(event.id, () =>
-    setIsEditOpen(false)
+  const updateMutation = useUpdateAppointment(
+    event.extendedProps?.appointmentId,
+    () => setIsEditOpen(false)
   );
 
-  const deleteMutation = useDeleteAppointment(event.id, () => {
-    setIsDeleteOpen(false);
-    onClose();
-  });
+  const deleteMutation = useDeleteAppointment(
+    event.extendedProps?.appointmentId,
+    () => {
+      setIsDeleteOpen(false);
+      onClose();
+    }
+  );
 
   const handleSave = (date: Date, time: string, notes: string) => {
+    console.log(date, time, notes);
     updateMutation.mutate({ date, time, notes });
   };
 

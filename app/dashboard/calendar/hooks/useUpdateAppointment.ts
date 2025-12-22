@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import { createClient } from '@/lib/supabase/client';
 import { updateAppointment } from '../lib/requests';
 import { setHours, setMinutes, addMinutes } from 'date-fns';
+import { APPOINTMENT_INTERVAL } from '@/lib/consts';
 
 export function useUpdateAppointment(appointmentId: string, onDone: () => void) {
   const queryClient = useQueryClient();
@@ -22,7 +23,7 @@ export function useUpdateAppointment(appointmentId: string, onDone: () => void) 
     }) => {
       const [hours, minutes] = time.split(':').map(Number);
       const newStartDate = setMinutes(setHours(date, hours), minutes);
-      const newEndDate = addMinutes(newStartDate, 30);
+      const newEndDate = addMinutes(newStartDate, APPOINTMENT_INTERVAL);
 
       return updateAppointment(supabase, appointmentId, {
         start_time: newStartDate.toISOString(),

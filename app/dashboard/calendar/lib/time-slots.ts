@@ -28,12 +28,9 @@ export function getAvailableTimeSlots(
   interval: number = APPOINTMENT_INTERVAL
 ): string[] {
   const allSlots = generateTimeSlots(date, interval);
-
   const reservedSlots = appointments.map((apt) =>
     format(parseISO(apt.start_time), 'HH:mm')
   );
-  debugger;
-
 
   return allSlots.filter((slot) => !reservedSlots.includes(slot));
 }
