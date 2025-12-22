@@ -25,11 +25,12 @@ import {
 } from '@/components/ui/select';
 import { Calendar } from '@/components/ui/calendar';
 import { EventClickArg } from '@fullcalendar/core';
-import { format } from 'date-fns';
+import { format, isSameDay } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { IconCalendar } from '@tabler/icons-react';
 import { cn } from '@/lib/utils';
 import { Textarea } from '@/components/ui/textarea';
+import { useAvailableTimes } from '../../hooks/useAvailableTimes';
 
 interface EditAppointmentDialogProps {
   isOpen: boolean;
@@ -37,8 +38,6 @@ interface EditAppointmentDialogProps {
   onSave: (date: Date, time: string, notes: string) => void;
   selectedEvent: EventClickArg;
 }
-
-const availableTimes = ['09:00', '10:30', '10:45', '12:30'];
 
 export function EditAppointmentDialog({
   isOpen,
@@ -48,16 +47,35 @@ export function EditAppointmentDialog({
 }: EditAppointmentDialogProps) {
   const { event } = selectedEvent;
 
-  const [date, setDate] = useState<Date>(event.start!);
+  const [date, setDate] = useState<Date | undefined>(event.start!);
   const [time, setTime] = useState<string>(
     event.start ? format(event.start, 'HH:mm') : ''
   );
   const [notes, setNotes] = useState<string>(event.extendedProps?.notes || '');
+  const { data: availableTimes, isLoading: isLoadingTimes } =
+    useAvailableTimes(date);
 
   useEffect(() => {
-    setTime(event.start ? format(event.start, 'HH:mm') : '');
-    setNotes(event.extendedProps?.notes || '');
+    if (event.start) {
+      const originalDate = event.start;
+      setDate(originalDate);
+      setTime(format(originalDate, 'HH:mm'));
+      setNotes(event.extendedProps?.notes || '');
+    }
   }, [event]);
+
+  useEffect(() => {
+    // Reset time when date changes, if the new date is different from the original event's date
+    if (date && event.start && !isSameDay(date, event.start)) {
+      setTime('');
+    }
+  }, [date, event.start]);
+
+  const handleDateSelect = (selectedDate: Date | undefined) => {
+    if (selectedDate) {
+      setDate(selectedDate);
+    }
+  };
 
   const handleSave = () => {
     if (date && time) {
@@ -111,7 +129,7 @@ export function EditAppointmentDialog({
                   <Calendar
                     mode="single"
                     selected={date}
-                    onSelect={setDate}
+                    onSelect={handleDateSelect}
                     required
                   />
                 </PopoverContent>
@@ -121,12 +139,16 @@ export function EditAppointmentDialog({
               <Label htmlFor="time" className="text-left md:text-right">
                 Modifică ora programării
               </Label>
-              <Select onValueChange={setTime} value={time}>
+              <Select
+                onValueChange={setTime}
+                value={time}
+                disabled={isLoadingTimes || !date}
+              >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select a time" />
                 </SelectTrigger>
                 <SelectContent>
-                  {availableTimes.map((t) => (
+                  {availableTimes?.map((t) => (
                     <SelectItem key={t} value={t}>
                       {t}
                     </SelectItem>

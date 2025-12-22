@@ -21,3 +21,7 @@ export const statusOptions: Option[] = [
   { label: 'Programat', value: 'confirmed' },
   { label: 'În curs', value: 'pending' },
 ];
+
+export const APPOINTMENT_INTERVAL = 60; // minutes
+export const START_HOUR = 9;
+export const END_HOUR = 18;
