@@ -13,6 +13,7 @@ import { View } from './CalendarHeader';
 import { useDateRange } from '../hooks/useDateRange';
 import { format, isToday } from 'date-fns';
 import { useFilteredEvents } from '../hooks/useFilteredEvents';
+import { AppointmentRow } from '../lib/requests';
 
 // Props
 interface CalendarProps {
@@ -38,9 +39,8 @@ const AppointmentEventContent = (eventInfo: EventContentArg) => (
 // Main Component
 export function Calendar({ view, date, searchQuery }: CalendarProps) {
   const calendarRef = useRef<FullCalendar>(null);
-  const [selectedEvent, setSelectedEvent] = useState<EventClickArg | null>(
-    null
-  );
+  const [selectedAppointment, setSelectedAppointment] =
+    useState<AppointmentRow | null>(null);
   const isMobile = useIsMobile();
 
   const dateRange = useDateRange(date, view);
@@ -62,15 +62,18 @@ export function Calendar({ view, date, searchQuery }: CalendarProps) {
   }, [view]);
 
   const handleEventClick = (clickInfo: EventClickArg) => {
-    if (view === 'dayGridMonth') return;
+    if (view === 'dayGridMonth' || !appointments) return;
 
-    if (
-      selectedEvent?.event?.extendedProps?.appointmentId ===
-      clickInfo.event?.extendedProps?.appointmentId
-    ) {
-      setSelectedEvent(null);
-    } else {
-      setSelectedEvent(clickInfo);
+    const appointmentId = clickInfo.event?.extendedProps?.appointmentId;
+
+    if (selectedAppointment?.id === appointmentId) {
+      setSelectedAppointment(null);
+      return;
+    }
+
+    const appointment = appointments.find((a) => a.id === appointmentId);
+    if (appointment) {
+      setSelectedAppointment(appointment);
     }
   };
 
@@ -114,10 +117,10 @@ export function Calendar({ view, date, searchQuery }: CalendarProps) {
         />
       </div>
 
-      {selectedEvent && (
+      {selectedAppointment && (
         <ViewDay
-          selectedEvent={selectedEvent}
-          onClose={() => setSelectedEvent(null)}
+          selectedAppointment={selectedAppointment}
+          onClose={() => setSelectedAppointment(null)}
           isMobile={isMobile}
         />
       )}

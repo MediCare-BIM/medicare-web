@@ -8,11 +8,7 @@ interface LogoProps {
   className?: string;
 }
 
-export function Logo({
-  monochrome = false,
-  size = 'md',
-  className,
-}: LogoProps) {
+export function Logo({ size = 'md', className }: LogoProps) {
   // Split the APP_NAME into two parts:
   // The "second part" starts with the first capital letter after the first
   // For "MediCare", this will make "Medi" and "Care"

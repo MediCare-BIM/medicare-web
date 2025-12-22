@@ -1,9 +1,7 @@
 
-import { APPOINTMENT_INTERVAL, END_HOUR, START_HOUR } from '@/lib/consts';
+import { APPOINTMENT_INTERVAL, START_HOUR, END_HOUR } from '@/lib/consts';
 import { addMinutes, format, setHours, setMinutes } from 'date-fns';
 import { parseISO } from 'date-fns/parseISO'
-
-
 
 export function generateTimeSlots(
   date: Date,

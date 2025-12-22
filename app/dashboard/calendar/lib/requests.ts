@@ -80,4 +80,35 @@ export const deleteAppointment = async (
     .eq('id', appointmentId);
 
   return { data, error };
-}
+};
+
+
+
+export const createAppointment = async (
+  supabase: SupabaseClient,
+  appointment: {
+    patient_id: string;
+    start_time: string;
+    notes: string;
+  }
+) => {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    throw new Error('User not found');
+  }
+  const { data: doctorData, error: doctorError } = await supabase.from('doctors').select('id').eq('user_id', user.id).single();
+
+  if (doctorError) {
+    throw new Error(doctorError.message);
+  }
+
+  const { data, error } = await supabase.from('appointments').insert([
+    {
+      ...appointment,
+      doctor_id: doctorData.id,
+    },
+  ]);
+  return { data, error };
+};

@@ -1,7 +1,6 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { EventClickArg } from '@fullcalendar/core';
 import { format } from 'date-fns';
 import {
   IconCalendar,
@@ -15,11 +14,10 @@ import { Sheet, SheetContent, SheetHeader } from '@/components/ui/sheet';
 import { useState } from 'react';
 import { EditAppointmentDialog } from './dialogs/EditAppointmentDialog';
 import { DeleteAppointmentDialog } from './dialogs/DeleteAppointmentDialog';
-import { useUpdateAppointment } from '../hooks/useUpdateAppointment';
-import { useDeleteAppointment } from '../hooks/useDeleteAppointment';
+import { AppointmentRow } from '../lib/requests';
 
 interface ViewDayProps {
-  selectedEvent: EventClickArg;
+  selectedAppointment: AppointmentRow;
   onClose: () => void;
   isMobile: boolean;
 }
@@ -30,7 +28,6 @@ interface ViewDayHeaderProps {
   hideCloseButton?: boolean;
   onEdit: () => void;
   onDelete: () => void;
-  isPending: boolean;
 }
 
 const ViewDayHeader = ({
@@ -39,39 +36,23 @@ const ViewDayHeader = ({
   hideCloseButton,
   onEdit,
   onDelete,
-  isPending,
 }: ViewDayHeaderProps) => (
   <div className="flex flex-col gap-2">
     <div className="flex justify-between w-full items-center">
       <span className="font-semibold">{title}</span>
       <div className="flex items-center gap-2">
         {!hideCloseButton && (
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onClose}
-            disabled={isPending}
-          >
+          <Button variant="ghost" size="icon" onClick={onClose}>
             <IconX className="h-4 w-4" />
           </Button>
         )}
       </div>
     </div>
     <div className="flex gap-2">
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={onEdit}
-        disabled={isPending}
-      >
+      <Button variant="outline" size="icon" onClick={onEdit}>
         <IconPencil className="h-4 w-4" />
       </Button>
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={onDelete}
-        disabled={isPending}
-      >
+      <Button variant="outline" size="icon" onClick={onDelete}>
         <IconTrash className="h-4 w-4" />
       </Button>
     </div>
@@ -79,15 +60,18 @@ const ViewDayHeader = ({
 );
 
 const ViewDayContent = ({
-  selectedEvent,
-}: Omit<ViewDayProps, 'isMobile' | 'onClose'>) => {
-  const { event } = selectedEvent;
-
-  const startDate = event.start
-    ? format(event.start, 'eeee, MMM dd, yyyy')
+  selectedAppointment,
+}: {
+  selectedAppointment: AppointmentRow;
+}) => {
+  const startDate = format(
+    new Date(selectedAppointment.start_time),
+    'eeee, MMM dd, yyyy'
+  );
+  const startTime = format(new Date(selectedAppointment.start_time), 'p');
+  const endTime = selectedAppointment.end_time
+    ? format(new Date(selectedAppointment.end_time), 'p')
     : '';
-  const startTime = event.start ? format(event.start, 'p') : '';
-  const endTime = event.end ? format(event.end, 'p') : '';
 
   return (
     <>
@@ -119,63 +103,43 @@ const ViewDayContent = ({
   );
 };
 
-export function ViewDay({ selectedEvent, onClose, isMobile }: ViewDayProps) {
-  const { event } = selectedEvent;
+export function ViewDay({
+  selectedAppointment,
+  onClose,
+  isMobile,
+}: ViewDayProps) {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
-  const updateMutation = useUpdateAppointment(
-    event.extendedProps?.appointmentId,
-    () => setIsEditOpen(false)
-  );
-
-  const deleteMutation = useDeleteAppointment(
-    event.extendedProps?.appointmentId,
-    () => {
-      setIsDeleteOpen(false);
-      onClose();
-    }
-  );
-
-  const handleSave = (date: Date, time: string, notes: string) => {
-    console.log(date, time, notes);
-    updateMutation.mutate({ date, time, notes });
-  };
-
-  const handleDelete = () => {
-    deleteMutation.mutate();
-  };
-
-  const isPending = updateMutation.isPending || deleteMutation.isPending;
-
   if (isMobile) {
     return (
-      <Sheet open={!!selectedEvent} onOpenChange={(open) => !open && onClose()}>
+      <Sheet
+        open={!!selectedAppointment}
+        onOpenChange={(open) => !open && onClose()}
+      >
         <SheetContent className="w-[400px] sm:w-[540px] p-4 flex flex-col gap-4">
           <SheetHeader className="p-0">
             <ViewDayHeader
-              title={event.title}
+              title={selectedAppointment.patient_full_name || ''}
               onClose={onClose}
               hideCloseButton
               onEdit={() => setIsEditOpen(true)}
               onDelete={() => setIsDeleteOpen(true)}
-              isPending={isPending}
             />
           </SheetHeader>
-          <ViewDayContent selectedEvent={selectedEvent} />
+          <ViewDayContent selectedAppointment={selectedAppointment} />
           {isEditOpen && (
             <EditAppointmentDialog
               isOpen={isEditOpen}
               onClose={() => setIsEditOpen(false)}
-              onSave={handleSave}
-              selectedEvent={selectedEvent}
+              selectedAppointment={selectedAppointment}
             />
           )}
           {isDeleteOpen && (
             <DeleteAppointmentDialog
               isOpen={isDeleteOpen}
               onClose={() => setIsDeleteOpen(false)}
-              onConfirm={handleDelete}
+              selectedAppointment={selectedAppointment}
             />
           )}
         </SheetContent>
@@ -186,26 +150,24 @@ export function ViewDay({ selectedEvent, onClose, isMobile }: ViewDayProps) {
   return (
     <div className="w-[400px] p-4 flex flex-col gap-4">
       <ViewDayHeader
-        title={event.title}
+        title={selectedAppointment.patient_full_name || ''}
         onClose={onClose}
         onEdit={() => setIsEditOpen(true)}
         onDelete={() => setIsDeleteOpen(true)}
-        isPending={isPending}
       />
-      <ViewDayContent selectedEvent={selectedEvent} />
+      <ViewDayContent selectedAppointment={selectedAppointment} />
       {isEditOpen && (
         <EditAppointmentDialog
           isOpen={isEditOpen}
           onClose={() => setIsEditOpen(false)}
-          onSave={handleSave}
-          selectedEvent={selectedEvent}
+          selectedAppointment={selectedAppointment}
         />
       )}
       {isDeleteOpen && (
         <DeleteAppointmentDialog
           isOpen={isDeleteOpen}
           onClose={() => setIsDeleteOpen(false)}
-          onConfirm={handleDelete}
+          selectedAppointment={selectedAppointment}
         />
       )}
     </div>

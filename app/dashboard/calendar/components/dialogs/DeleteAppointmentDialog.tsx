@@ -9,18 +9,25 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
+import { useDeleteAppointment } from '../../hooks/useDeleteAppointment';
+import { AppointmentRow } from '../../lib/requests';
 
 interface DeleteAppointmentDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: () => void;
+  selectedAppointment: AppointmentRow;
 }
 
 export function DeleteAppointmentDialog({
   isOpen,
   onClose,
-  onConfirm,
+  selectedAppointment,
 }: DeleteAppointmentDialogProps) {
+  const { mutate: handleDelete, isPending } = useDeleteAppointment(
+    selectedAppointment.id,
+    onClose
+  );
+
   return (
     <AlertDialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <AlertDialogContent>
@@ -35,11 +42,15 @@ export function DeleteAppointmentDialog({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="outline" onClick={onClose} disabled={isPending}>
             Anulează
           </Button>
-          <Button variant="destructive" onClick={onConfirm}>
-            Șterge
+          <Button
+            variant="destructive"
+            onClick={() => handleDelete()}
+            disabled={isPending}
+          >
+            {isPending ? 'Se șterge...' : 'Șterge'}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

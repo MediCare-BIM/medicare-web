@@ -2,10 +2,7 @@ import { AppointmentWithDoctorAndPatient } from '@/lib/types';
 import { createClient } from '@/lib/supabase/server';
 import { Dashboard } from './components/Dashboard';
 
-async function getDashboardData(filters: {
-  search?: string;
-  status?: string;
-}) {
+async function getDashboardData(filters: { search?: string; status?: string }) {
   const supabase = await createClient();
 
   const { search, status } = filters;
@@ -17,9 +14,7 @@ async function getDashboardData(filters: {
   // Base query
   let appointmentsQuery = supabase
     .from('appointments')
-    .select(
-      '*, doctor:doctors(full_name), patient:patients(full_name)'
-    )
+    .select('*, doctor:doctors(full_name), patient:patients(full_name)')
     .gte('start_time', todayStart)
     .lte('start_time', todayEnd)
     .order('start_time', {
@@ -43,10 +38,10 @@ async function getDashboardData(filters: {
   }
 
   // Fetch data
-  const { data: appointments, error: appointmentsError } = await appointmentsQuery;
+  const { data: appointments, error: appointmentsError } =
+    await appointmentsQuery;
 
   if (appointmentsError) {
-    console.error({ appointmentsError });
     return {
       appointments: [],
       error: 'Failed to fetch data.',
@@ -88,4 +83,3 @@ export default async function DashboardPage({
     />
   );
 }
-
