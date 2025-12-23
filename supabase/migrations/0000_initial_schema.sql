@@ -64,6 +64,9 @@ CREATE TABLE appointments (
     start_time TIMESTAMPTZ NOT NULL,
     end_time TIMESTAMPTZ,
     status appointment_status NOT NULL DEFAULT 'scheduled',
+    reason TEXT,
+    priority TEXT,
+    notes TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 CREATE INDEX ON appointments (doctor_id);

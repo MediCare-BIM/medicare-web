@@ -1,14 +1,8 @@
 import { AppointmentWithDoctorAndPatient } from '@/lib/types';
 import { createClient } from '@/lib/supabase/server';
-import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
-import { AppSidebar } from '@/components/app-sidebar';
-import { SiteHeader } from '@/components/site-header';
 import { Dashboard } from './components/Dashboard';
 
-async function getDashboardData(filters: {
-  search?: string;
-  status?: string;
-}) {
+async function getDashboardData(filters: { search?: string; status?: string }) {
   const supabase = await createClient();
 
   const { search, status } = filters;
@@ -20,9 +14,7 @@ async function getDashboardData(filters: {
   // Base query
   let appointmentsQuery = supabase
     .from('appointments')
-    .select(
-      '*, doctor:doctors(full_name), patient:patients(full_name)'
-    )
+    .select('*, doctor:doctors(full_name), patient:patients(full_name)')
     .gte('start_time', todayStart)
     .lte('start_time', todayEnd)
     .order('start_time', {
@@ -46,10 +38,10 @@ async function getDashboardData(filters: {
   }
 
   // Fetch data
-  const { data: appointments, error: appointmentsError } = await appointmentsQuery;
+  const { data: appointments, error: appointmentsError } =
+    await appointmentsQuery;
 
   if (appointmentsError) {
-    console.error({ appointmentsError });
     return {
       appointments: [],
       error: 'Failed to fetch data.',
@@ -67,11 +59,6 @@ export default async function DashboardPage({
 }: {
   searchParams: { [key: string]: string | undefined };
 }) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
   const { search, status } = await searchParams;
   const { appointments, error } = await getDashboardData({
     search,
@@ -90,22 +77,9 @@ export default async function DashboardPage({
   });
 
   return (
-    <SidebarProvider
-      style={
-        {
-          '--sidebar-width': 'calc(var(--spacing) * 72)',
-          '--header-height': 'calc(var(--spacing) * 12)',
-        } as React.CSSProperties
-      }
-    >
-      <AppSidebar variant="sidebar" user={user} />
-      <SidebarInset>
-        <SiteHeader />
-        <Dashboard
-          appointments={appointments as AppointmentWithDoctorAndPatient[]}
-          todayString={todayString}
-        />
-      </SidebarInset>
-    </SidebarProvider>
+    <Dashboard
+      appointments={appointments as AppointmentWithDoctorAndPatient[]}
+      todayString={todayString}
+    />
   );
 }

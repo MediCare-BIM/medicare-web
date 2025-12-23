@@ -91,7 +91,10 @@ export type Database = {
           doctor_id: string
           end_time: string | null
           id: string
+          notes: string | null
           patient_id: string
+          priority: string | null
+          reason: string | null
           start_time: string
           status: Database["public"]["Enums"]["appointment_status"]
         }
@@ -100,7 +103,10 @@ export type Database = {
           doctor_id: string
           end_time?: string | null
           id?: string
+          notes?: string | null
           patient_id: string
+          priority?: string | null
+          reason?: string | null
           start_time: string
           status?: Database["public"]["Enums"]["appointment_status"]
         }
@@ -109,7 +115,10 @@ export type Database = {
           doctor_id?: string
           end_time?: string | null
           id?: string
+          notes?: string | null
           patient_id?: string
+          priority?: string | null
+          reason?: string | null
           start_time?: string
           status?: Database["public"]["Enums"]["appointment_status"]
         }
