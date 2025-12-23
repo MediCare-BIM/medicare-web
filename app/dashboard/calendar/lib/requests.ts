@@ -31,7 +31,7 @@ export const getAppointments = async (
         reason,
         priority,
         notes,
-        patients ( full_name )
+        patient:patients ( full_name )
     `
     )
     .gte('start_time', from)
@@ -42,6 +42,7 @@ export const getAppointments = async (
     return { data: null, error };
   }
 
+
   const appointments: AppointmentRow[] = (data || []).map((row) => ({
     id: row.id,
     doctor_id: row.doctor_id,
@@ -51,7 +52,9 @@ export const getAppointments = async (
     status: row.status,
     reason: row.reason,
     priority: row.priority,
-    patient_full_name: row.patients?.full_name ?? null,
+    //@ts-expect-error The 'patient' property is actually an object, but TS considers it as an array due to the join operation.
+    patient_full_name: row.patient?.full_name ?? null,
+    notes: row.notes,
   }));
 
   return { data: appointments, error: null };
