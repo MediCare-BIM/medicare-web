@@ -16,31 +16,28 @@ export type Database = {
     Tables: {
       ai_summaries: {
         Row: {
-          content: string
+          content: Json
           generated_at: string
           id: string
           patient_id: string
-          type: Database["public"]["Enums"]["summary_type"]
         }
         Insert: {
-          content: string
+          content: Json
           generated_at?: string
           id?: string
           patient_id: string
-          type: Database["public"]["Enums"]["summary_type"]
         }
         Update: {
-          content?: string
+          content?: Json
           generated_at?: string
           id?: string
           patient_id?: string
-          type?: Database["public"]["Enums"]["summary_type"]
         }
         Relationships: [
           {
             foreignKeyName: "ai_summaries_patient_id_fkey"
             columns: ["patient_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "patients"
             referencedColumns: ["id"]
           },
