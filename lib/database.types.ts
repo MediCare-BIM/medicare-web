@@ -21,7 +21,6 @@ export type Database = {
           id: string
           patient_id: string
           type: Database["public"]["Enums"]["summary_type"]
-          visit_id: string | null
         }
         Insert: {
           content: string
@@ -29,7 +28,6 @@ export type Database = {
           id?: string
           patient_id: string
           type: Database["public"]["Enums"]["summary_type"]
-          visit_id?: string | null
         }
         Update: {
           content?: string
@@ -37,7 +35,6 @@ export type Database = {
           id?: string
           patient_id?: string
           type?: Database["public"]["Enums"]["summary_type"]
-          visit_id?: string | null
         }
         Relationships: [
           {
@@ -45,13 +42,6 @@ export type Database = {
             columns: ["patient_id"]
             isOneToOne: false
             referencedRelation: "patients"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ai_summaries_visit_id_fkey"
-            columns: ["visit_id"]
-            isOneToOne: false
-            referencedRelation: "visits"
             referencedColumns: ["id"]
           },
         ]
@@ -205,7 +195,6 @@ export type Database = {
           result_date: string
           test_name: string
           unit: string | null
-          visit_id: string | null
         }
         Insert: {
           id?: string
@@ -214,7 +203,6 @@ export type Database = {
           result_date: string
           test_name: string
           unit?: string | null
-          visit_id?: string | null
         }
         Update: {
           id?: string
@@ -223,7 +211,6 @@ export type Database = {
           result_date?: string
           test_name?: string
           unit?: string | null
-          visit_id?: string | null
         }
         Relationships: [
           {
@@ -233,38 +220,41 @@ export type Database = {
             referencedRelation: "patients"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "lab_results_visit_id_fkey"
-            columns: ["visit_id"]
-            isOneToOne: false
-            referencedRelation: "visits"
-            referencedColumns: ["id"]
-          },
         ]
       }
       medical_notes: {
         Row: {
+          appointment_id: string
           content: string
           created_at: string
           doctor_id: string
           id: string
-          visit_id: string
+          patient_id: string
         }
         Insert: {
+          appointment_id: string
           content: string
           created_at?: string
           doctor_id: string
           id?: string
-          visit_id: string
+          patient_id: string
         }
         Update: {
+          appointment_id?: string
           content?: string
           created_at?: string
           doctor_id?: string
           id?: string
-          visit_id?: string
+          patient_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "medical_notes_appointment_id_fkey"
+            columns: ["appointment_id"]
+            isOneToOne: false
+            referencedRelation: "appointments"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "medical_notes_doctor_id_fkey"
             columns: ["doctor_id"]
@@ -273,39 +263,59 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "medical_notes_visit_id_fkey"
-            columns: ["visit_id"]
+            foreignKeyName: "medical_notes_patient_id_fkey"
+            columns: ["patient_id"]
             isOneToOne: false
-            referencedRelation: "visits"
+            referencedRelation: "patients"
             referencedColumns: ["id"]
           },
         ]
       }
       medical_reports: {
         Row: {
+          appointment_id: string
           content: string
+          doctor_id: string
           generated_at: string
           id: string
-          visit_id: string
+          patient_id: string
         }
         Insert: {
+          appointment_id: string
           content: string
+          doctor_id: string
           generated_at?: string
           id?: string
-          visit_id: string
+          patient_id: string
         }
         Update: {
+          appointment_id?: string
           content?: string
+          doctor_id?: string
           generated_at?: string
           id?: string
-          visit_id?: string
+          patient_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "medical_reports_visit_id_fkey"
-            columns: ["visit_id"]
+            foreignKeyName: "medical_reports_appointment_id_fkey"
+            columns: ["appointment_id"]
             isOneToOne: false
-            referencedRelation: "visits"
+            referencedRelation: "appointments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "medical_reports_doctor_id_fkey"
+            columns: ["doctor_id"]
+            isOneToOne: false
+            referencedRelation: "doctors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "medical_reports_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
             referencedColumns: ["id"]
           },
         ]
@@ -352,7 +362,6 @@ export type Database = {
           id: string
           medication_text: string
           patient_id: string
-          visit_id: string
         }
         Insert: {
           created_at?: string
@@ -360,7 +369,6 @@ export type Database = {
           id?: string
           medication_text: string
           patient_id: string
-          visit_id: string
         }
         Update: {
           created_at?: string
@@ -368,7 +376,6 @@ export type Database = {
           id?: string
           medication_text?: string
           patient_id?: string
-          visit_id?: string
         }
         Relationships: [
           {
@@ -383,13 +390,6 @@ export type Database = {
             columns: ["patient_id"]
             isOneToOne: false
             referencedRelation: "patients"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "prescriptions_visit_id_fkey"
-            columns: ["visit_id"]
-            isOneToOne: false
-            referencedRelation: "visits"
             referencedColumns: ["id"]
           },
         ]
@@ -411,58 +411,6 @@ export type Database = {
           role?: Database["public"]["Enums"]["user_role"]
         }
         Relationships: []
-      }
-      visits: {
-        Row: {
-          appointment_id: string | null
-          created_at: string
-          doctor_id: string
-          id: string
-          patient_id: string
-          reason: string | null
-          visit_date: string
-        }
-        Insert: {
-          appointment_id?: string | null
-          created_at?: string
-          doctor_id: string
-          id?: string
-          patient_id: string
-          reason?: string | null
-          visit_date: string
-        }
-        Update: {
-          appointment_id?: string | null
-          created_at?: string
-          doctor_id?: string
-          id?: string
-          patient_id?: string
-          reason?: string | null
-          visit_date?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "visits_appointment_id_fkey"
-            columns: ["appointment_id"]
-            isOneToOne: true
-            referencedRelation: "appointments"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "visits_doctor_id_fkey"
-            columns: ["doctor_id"]
-            isOneToOne: false
-            referencedRelation: "doctors"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "visits_patient_id_fkey"
-            columns: ["patient_id"]
-            isOneToOne: false
-            referencedRelation: "patients"
-            referencedColumns: ["id"]
-          },
-        ]
       }
     }
     Views: {
