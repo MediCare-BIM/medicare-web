@@ -111,6 +111,11 @@ export function ViewDay({
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
+  const handleOnClose = () => {
+    onClose();
+    setIsEditOpen(false);
+    setIsDeleteOpen(false);
+  };
   if (isMobile) {
     return (
       <Sheet
@@ -138,7 +143,7 @@ export function ViewDay({
           {isDeleteOpen && (
             <DeleteAppointmentDialog
               isOpen={isDeleteOpen}
-              onClose={() => setIsDeleteOpen(false)}
+              onClose={handleOnClose}
               selectedAppointment={selectedAppointment}
             />
           )}
@@ -151,7 +156,7 @@ export function ViewDay({
     <div className="w-[400px] p-4 flex flex-col gap-4">
       <ViewDayHeader
         title={selectedAppointment.patient_full_name || ''}
-        onClose={onClose}
+        onClose={handleOnClose}
         onEdit={() => setIsEditOpen(true)}
         onDelete={() => setIsDeleteOpen(true)}
       />
@@ -166,7 +171,7 @@ export function ViewDay({
       {isDeleteOpen && (
         <DeleteAppointmentDialog
           isOpen={isDeleteOpen}
-          onClose={() => setIsDeleteOpen(false)}
+          onClose={handleOnClose}
           selectedAppointment={selectedAppointment}
         />
       )}

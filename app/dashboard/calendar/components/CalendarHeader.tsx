@@ -16,65 +16,40 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useDebouncedCallback } from 'use-debounce';
 import { getPeriodString } from '../lib/utils';
-import {
-  addMonths,
-  addWeeks,
-  addDays,
-  subMonths,
-  subWeeks,
-  subDays,
-} from 'date-fns';
 import { useState } from 'react';
 import { AddAppointmentDialog } from './dialogs/AddAppointmentDialog';
-
-export type View = 'dayGridMonth' | 'timeGridWeek' | 'timeGridDay';
-
-interface CalendarHeaderProps {
-  view: View;
-  date: Date;
-  onDateChange: (date: Date) => void;
-  onViewChange: (view: View) => void;
-  onSearch: (query: string) => void;
-}
+import { useCalendarStore, View } from '../store';
+import FullCalendar from '@fullcalendar/react';
 
 export function CalendarHeader({
-  view,
-  date,
-  onDateChange,
-  onViewChange,
-  onSearch,
-}: CalendarHeaderProps) {
+  calendarRef,
+}: {
+  calendarRef: React.RefObject<FullCalendar | null>;
+}) {
+  const { view, date, setView, setDate, setSearchQuery } = useCalendarStore();
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const handleSearch = useDebouncedCallback((query: string) => {
-    onSearch(query);
+    setSearchQuery(query);
   }, 300);
 
   const handlePrev = () => {
-    let newDate;
-    if (view === 'dayGridMonth') {
-      newDate = subMonths(date, 1);
-    } else if (view === 'timeGridWeek') {
-      newDate = subWeeks(date, 1);
-    } else {
-      newDate = subDays(date, 1);
-    }
-    onDateChange(newDate);
+    calendarRef?.current?.getApi().prev();
+    setDate(calendarRef?.current?.getApi().getDate() || new Date());
   };
 
   const handleNext = () => {
-    let newDate;
-    if (view === 'dayGridMonth') {
-      newDate = addMonths(date, 1);
-    } else if (view === 'timeGridWeek') {
-      newDate = addWeeks(date, 1);
-    } else {
-      newDate = addDays(date, 1);
-    }
-    onDateChange(newDate);
+    calendarRef?.current?.getApi().next();
+    setDate(calendarRef?.current?.getApi().getDate() || new Date());
   };
 
   const handleToday = () => {
-    onDateChange(new Date());
+    calendarRef?.current?.getApi().today();
+    setDate(calendarRef?.current?.getApi().getDate() || new Date());
+  };
+
+  const handleOnViewChange = (newView: View) => {
+    calendarRef?.current?.getApi().changeView(newView);
+    setView(newView);
   };
 
   return (
@@ -140,13 +115,19 @@ export function CalendarHeader({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem onClick={() => onViewChange('timeGridWeek')}>
+                <DropdownMenuItem
+                  onClick={() => handleOnViewChange('timeGridWeek')}
+                >
                   Week
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => onViewChange('dayGridMonth')}>
+                <DropdownMenuItem
+                  onClick={() => handleOnViewChange('dayGridMonth')}
+                >
                   Month
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => onViewChange('timeGridDay')}>
+                <DropdownMenuItem
+                  onClick={() => handleOnViewChange('timeGridDay')}
+                >
                   Day
                 </DropdownMenuItem>
               </DropdownMenuContent>

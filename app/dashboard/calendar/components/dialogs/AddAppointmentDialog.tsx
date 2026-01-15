@@ -12,7 +12,8 @@ import {
 import { useAppointmentForm } from '../../hooks/useAppointmentForm';
 import { AppointmentForm } from './AppointmentForm';
 import { useCreateAppointment } from '../../hooks/useCreateAppointment';
-import { format } from 'date-fns';
+import { addMinutes, setHours, setMinutes, setSeconds } from 'date-fns';
+import { APPOINTMENT_INTERVAL } from '@/lib/consts';
 
 interface AddAppointmentDialogProps {
   isOpen: boolean;
@@ -24,25 +25,32 @@ export function AddAppointmentDialog({
   onClose,
 }: AddAppointmentDialogProps) {
   const { formData, formHandlers, formState } = useAppointmentForm();
-  const createAppointment = useCreateAppointment();
+  const { mutate, isPending } = useCreateAppointment();
 
   const handleSave = () => {
-    if (formData.date && formData.time && formData.patientId) {
-      createAppointment.mutate(
-        {
-          patient_id: formData.patientId,
-          start_time: `${format(formData.date, 'yyyy-MM-dd')}T${
-            formData.time
-          }:00`,
-          notes: formData.notes,
-        },
-        {
-          onSuccess: () => {
-            onClose();
-          },
-        }
-      );
+    const { date, time, patientId, notes } = formData;
+
+    if (!date || !time || !patientId) {
+      return;
     }
+
+    const [hours, minutes] = time.split(':').map(Number);
+    const startTime = setSeconds(setMinutes(setHours(date, hours), minutes), 0);
+    const endTime = addMinutes(startTime, APPOINTMENT_INTERVAL);
+
+    mutate(
+      {
+        patient_id: patientId,
+        start_time: startTime.toISOString(),
+        end_time: endTime.toISOString(),
+        notes: notes,
+      },
+      {
+        onSuccess: () => {
+          onClose();
+        },
+      }
+    );
   };
 
   return (
@@ -68,9 +76,13 @@ export function AddAppointmentDialog({
           <Button
             type="submit"
             onClick={handleSave}
-            disabled={createAppointment.isPending}
+            disabled={
+              isPending ||
+              formData.patientId === undefined ||
+              formData.time === ''
+            }
           >
-            {createAppointment.isPending ? 'Se salvează...' : 'Salvează'}
+            {isPending ? 'Se salvează...' : 'Salvează'}
           </Button>
         </DialogFooter>
       </DialogContent>

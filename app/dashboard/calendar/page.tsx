@@ -1,26 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef } from 'react';
 import { Calendar } from './components/Calendar';
-import { CalendarHeader, View } from './components/CalendarHeader';
+import { CalendarHeader } from './components/CalendarHeader';
+import FullCalendar from '@fullcalendar/react';
 
 export default function CalendarPage() {
-  const [view, setView] = useState<View>('timeGridWeek');
-  const [date, setDate] = useState(new Date());
-  const [searchQuery, setSearchQuery] = useState('');
+  const calendarRef = useRef<FullCalendar>(null);
 
   return (
     <>
-      <CalendarHeader
-        view={view}
-        date={date}
-        onViewChange={setView}
-        onDateChange={setDate}
-        onSearch={setSearchQuery}
-      />
-      <div className="h-full border-t-1">
-        <Calendar view={view} date={date} searchQuery={searchQuery} />
-      </div>
+      <CalendarHeader calendarRef={calendarRef} />
+      <Calendar calendarRef={calendarRef} />
     </>
   );
 }

@@ -6,7 +6,7 @@ import { AppointmentRow } from '../lib/requests';
 export function useAppointmentForm(
   appointment?: AppointmentRow
 ) {
-  const [date, setDate] = useState<Date | undefined>(
+  const [date, setDate] = useState<Date>(
     appointment ? new Date(appointment.start_time) : new Date()
   );
   const [time, setTime] = useState<string>(

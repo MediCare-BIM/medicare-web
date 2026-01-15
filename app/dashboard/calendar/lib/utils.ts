@@ -26,7 +26,7 @@ export const getPeriodString = (
   }
 
   if (view === 'timeGridWeek') {
-    const startOfWeekDate = startOfWeek(date, { weekStartsOn: 1 })
+    const startOfWeekDate = startOfWeek(date);
     const endOfWeekDate = new Date(startOfWeekDate)
     endOfWeekDate.setDate(startOfWeekDate.getDate() + 6)
 
