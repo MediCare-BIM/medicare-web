@@ -52,7 +52,10 @@ export function AppointmentForm({
           value={patientId}
           disabled={!!appointment || isLoadingPatients}
         >
-          <SelectTrigger className="w-full mt-2">
+          <SelectTrigger
+            className="w-full mt-2"
+            disabled={patients?.length === 0}
+          >
             <SelectValue placeholder="Select a patient" />
           </SelectTrigger>
           <SelectContent>

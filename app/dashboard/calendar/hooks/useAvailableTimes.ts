@@ -1,29 +1,13 @@
-
-import { useQuery } from '@tanstack/react-query';
-import { format } from 'date-fns';
+import { startOfDay, endOfDay } from 'date-fns';
 import { getAvailableTimeSlots } from '../lib/time-slots';
+import { useAppointments } from './useAppointments';
 
-async function fetchAppointmentsForDate(date: Date): Promise<{ start_time: string }[]> {
-  const formattedDate = format(date, 'yyyy-MM-dd');
-  const response = await fetch(`/api/appointments/${formattedDate}`);
 
-  if (!response.ok) {
-    throw new Error('Failed to fetch appointments');
-  }
+export function useAvailableTimes(date: Date) {
+  const { data: appointments, isLoading, isError } = useAppointments({ from: startOfDay(date).toISOString(), to: endOfDay(date).toISOString() });
 
-  return response.json();
+
+
+  return { data: getAvailableTimeSlots(date, appointments || []), isLoading, isError };
 }
 
-export function useAvailableTimes(date: Date | undefined) {
-  return useQuery({
-    queryKey: ['availableTimes', date ? format(date, 'yyyy-MM-dd') : ''],
-    queryFn: async () => {
-      if (!date) {
-        return [];
-      }
-      const appointments = await fetchAppointmentsForDate(date);
-      return getAvailableTimeSlots(date, appointments);
-    },
-    enabled: !!date,
-  });
-}

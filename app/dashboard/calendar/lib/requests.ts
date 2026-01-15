@@ -92,6 +92,7 @@ export const createAppointment = async (
   appointment: {
     patient_id: string;
     start_time: string;
+    end_time: string;
     notes: string;
   }
 ) => {
@@ -111,6 +112,7 @@ export const createAppointment = async (
     {
       ...appointment,
       doctor_id: doctorData.id,
+      end_time: appointment.end_time,
     },
   ]);
   return { data, error };

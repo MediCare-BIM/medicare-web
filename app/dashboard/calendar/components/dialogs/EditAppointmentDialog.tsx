@@ -64,7 +64,15 @@ export function EditAppointmentDialog({
           <Button variant="outline" onClick={onClose}>
             Anulează
           </Button>
-          <Button type="submit" onClick={handleSave} disabled={isPending}>
+          <Button
+            type="submit"
+            onClick={handleSave}
+            disabled={
+              isPending ||
+              formData.patientId === undefined ||
+              formData.time === ''
+            }
+          >
             {isPending ? 'Se salvează...' : 'Salvează'}
           </Button>
         </DialogFooter>
