@@ -24,6 +24,8 @@ const eslintConfig = [
     'out/**',
     'build/**',
     'next-env.d.ts',
+    // Ignore Supabase functions from linting/build checks
+    'supabase/functions/**',
   ]),
 ];
 
