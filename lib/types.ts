@@ -19,6 +19,7 @@ export type Option = {
 
 export type ReportType = 'Consultație' | 'Prescripție';
 
+// Display type for reports, derived from database types
 export type Report = {
   id: string;
   patientName: string;
@@ -26,4 +27,14 @@ export type Report = {
   diagnosis: string;
   type: ReportType;
   patientId: string;
+};
+
+// Type for consultation with patient info for display
+export type ControlConsultationWithPatient = ControlConsultation & {
+  patients: Pick<Patient, "full_name"> | Pick<Patient, "full_name">[] | null;
+};
+
+// Type for prescription with patient info for display
+export type PrescriptionWithPatient = Prescription & {
+  patients: Pick<Patient, "full_name"> | Pick<Patient, "full_name">[] | null;
 };
