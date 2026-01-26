@@ -120,8 +120,16 @@ export function Reports({ reports }: ReportsProps) {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem>Consultație</DropdownMenuItem>
-                        <DropdownMenuItem>Prescripție</DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => console.log('Generate "Consultație" report')}
+                        >
+                          Consultație
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => console.log('Generate "Prescripție" report')}
+                        >
+                          Prescripție
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
