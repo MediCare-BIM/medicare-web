@@ -28,24 +28,11 @@ async function getReportsData() {
     const doctorId = doctorData.id;
 
     // Fetch control consultations
-    const { data: consultations, error: consultationsError }
-        =
-        await supabase
-            .from(
-                'control_consultations'
-            )
-            .select(
-                'id, generated_at, diagnosis, patient_id, patients(full_name)'
-            )
-            .eq(
-                'doctor_id'
-                , doctorId)
-            .order(
-                'generated_at'
-                , {
-                    ascending:
-                        false
-                });
+    const { data: consultations, error: consultationsError } = await supabase
+        .from('control_consultations')
+        .select('id, generated_at, diagnosis, patient_id, patients(full_name)')
+        .eq('doctor_id', doctorId)
+        .order('generated_at', { ascending: false });
     // Fetch prescriptions
     const { data: prescriptions, error: prescriptionsError } = await supabase
         .from('prescriptions')
