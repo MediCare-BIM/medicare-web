@@ -46,7 +46,6 @@ async function getReportsData() {
                     ascending:
                         false
                 });
-    console.log({ consultations, consultationsError, doctorId })
     // Fetch prescriptions
     const { data: prescriptions, error: prescriptionsError } = await supabase
         .from('prescriptions')
