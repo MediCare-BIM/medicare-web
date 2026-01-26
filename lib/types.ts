@@ -15,3 +15,13 @@ export type Option = {
   value: string;
 };
 
+export type ReportType = 'Consultație' | 'Prescripție';
+
+export type Report = {
+  id: string;
+  patientName: string;
+  date: string;
+  diagnosis: string;
+  type: ReportType;
+  patientId: string;
+};
