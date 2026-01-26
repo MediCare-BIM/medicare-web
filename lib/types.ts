@@ -4,6 +4,8 @@ export type Appointment = Database["public"]["Tables"]["appointments"]["Row"];
 export type UserProfile = Database["public"]["Tables"]["users_profile"]["Row"];
 export type Doctor = Database["public"]["Tables"]["doctors"]["Row"];
 export type Patient = Database["public"]["Tables"]["patients"]["Row"];
+export type ControlConsultation = Database["public"]["Tables"]["control_consultations"]["Row"];
+export type Prescription = Database["public"]["Tables"]["prescriptions"]["Row"];
 
 export type AppointmentWithDoctorAndPatient = Appointment & {
   doctor: Pick<Doctor, "full_name"> | null;
