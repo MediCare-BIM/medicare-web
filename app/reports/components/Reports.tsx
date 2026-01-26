@@ -136,7 +136,13 @@ export function Reports({ reports }: ReportsProps) {
                 </div>
 
                 <div className="rounded-md border">
-                  <ReportsTable reports={filteredReports} />
+                  {filteredReports.length > 0 ? (
+                    <ReportsTable reports={filteredReports} />
+                  ) : (
+                    <div className="flex h-[300px] items-center justify-center text-center text-sm text-muted-foreground">
+                      Nu s-au găsit rapoarte care să corespundă filtrelor.
+                    </div>
+                  )}
                 </div>
               </>
             ) : (
