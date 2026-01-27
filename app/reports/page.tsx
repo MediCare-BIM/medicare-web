@@ -1,4 +1,4 @@
-import { Report } from '@/lib/types';
+import { Report, ControlConsultationWithPatient, PrescriptionWithPatient, Prescription } from '@/lib/types';
 import { createClient } from '@/lib/supabase/server';
 import { Reports } from './components/Reports';
 
@@ -56,7 +56,7 @@ async function getReportsData() {
     }
 
     // Normalize consultations to Report type
-    const consultationReports: Report[] = (consultations || []).map((consultation) => {
+    const consultationReports: Report[] = (consultations as ControlConsultationWithPatient[] || []).map((consultation) => {
         const patient = Array.isArray(consultation.patients)
             ? consultation.patients[0]
             : consultation.patients;
@@ -72,7 +72,7 @@ async function getReportsData() {
     });
 
     // Normalize prescriptions to Report type
-    const prescriptionReports: Report[] = (prescriptions || []).map((prescription) => {
+    const prescriptionReports: Report[] = (prescriptions as PrescriptionWithPatient[] || []).map((prescription) => {
         const patient = Array.isArray(prescription.patients)
             ? prescription.patients[0]
             : prescription.patients;
@@ -99,7 +99,7 @@ async function getReportsData() {
 }
 
 // Helper function to extract label from medications JSONB
-function extractMedicationsLabel(medications: any): string {
+function extractMedicationsLabel(medications: Prescription['medications']): string {
     if (!medications) return 'Prescripție medicală';
 
     // If medications is an array, get the first medication name
@@ -108,13 +108,13 @@ function extractMedicationsLabel(medications: any): string {
         if (typeof firstMed === 'string') {
             return firstMed.substring(0, 50);
         }
-        if (firstMed.name) {
+        if (firstMed && typeof firstMed === 'object' && 'name' in firstMed && typeof firstMed.name === 'string') {
             return firstMed.name.substring(0, 50);
         }
     }
 
     // If medications is an object with a name property
-    if (typeof medications === 'object' && medications.name) {
+    if (typeof medications === 'object' && medications !== null && !Array.isArray(medications) && 'name' in medications && typeof medications.name === 'string') {
         return medications.name.substring(0, 50);
     }
 
