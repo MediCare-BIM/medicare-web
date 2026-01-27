@@ -1,0 +1,402 @@
+[
+  {
+    "id": 1,
+    "patientName": "Dulce George",
+    "lastVisit": "02.01.2025",
+    "primaryDiagnosis": "Hipertensiune arterială + Diabet tip 2",
+    "status": "Stable",
+    "nextSteps": "Ecografie hepatică programată"
+  },
+  {
+    "id": 2,
+    "patientName": "Popescu Maria",
+    "lastVisit": "15.01.2025",
+    "primaryDiagnosis": "Astm bronșic + Rinită alergică",
+    "status": "Active",
+    "nextSteps": "Consult alergologie peste 2 săptămâni"
+  },
+  {
+    "id": 3,
+    "patientName": "Ionescu Alexandru",
+    "lastVisit": "18.01.2025",
+    "primaryDiagnosis": "Boală renală cronică stadiul 3",
+    "status": "Monitoring",
+    "nextSteps": "Analize sangvine lunar + Consult nefrologie"
+  },
+  {
+    "id": 4,
+    "patientName": "Constantinescu Elena",
+    "lastVisit": "10.01.2025",
+    "primaryDiagnosis": "Hipotiroidism + Anemie feriprivă",
+    "status": "Stable",
+    "nextSteps": "Reevaluare TSH peste 3 luni"
+  },
+  {
+    "id": 5,
+    "patientName": "Georgescu Mihai",
+    "lastVisit": "05.01.2025",
+    "primaryDiagnosis": "Cardiopatie ischemică cronică",
+    "status": "Stable",
+    "nextSteps": "Ecocardiografie programată în februarie"
+  },
+  {
+    "id": 6,
+    "patientName": "Stanciu Ana",
+    "lastVisit": "22.01.2025",
+    "primaryDiagnosis": "Gastrita cronică + Reflux gastroesofagian",
+    "status": "Monitoring",
+    "nextSteps": "Endoscopie digestivă superioară la recomandare"
+  },
+  {
+    "id": 7,
+    "patientName": "Radu Cristian",
+    "lastVisit": "20.01.2025",
+    "primaryDiagnosis": "Artrită reumatoidă",
+    "status": "Active",
+    "nextSteps": "Ajustare tratament + Consult reumatologie urgentă"
+  },
+  {
+    "id": 8,
+    "patientName": "Munteanu Ioana",
+    "lastVisit": "12.01.2025",
+    "primaryDiagnosis": "Migrene cronice + Anxietate generalizată",
+    "status": "Monitoring",
+    "nextSteps": "Evaluare neurologică + Psihoterapie recomandată"
+  },
+  {
+    "id": 9,
+    "patientName": "Dobre Vasile",
+    "lastVisit": "25.01.2025",
+    "primaryDiagnosis": "Bronhopneumopatie obstructivă cronică",
+    "status": "Monitoring",
+    "nextSteps": "Spirometrie de control + Vaccinare antigripală"
+  },
+  {
+    "id": 10,
+    "patientName": "Marinescu Gabriela",
+    "lastVisit": "08.01.2025",
+    "primaryDiagnosis": "Osteoporoză + Deficit vitamina D",
+    "status": "Stable",
+    "nextSteps": "Densitometrie osoasă anuală programată"
+  },
+  {
+    "id": 11,
+    "patientName": "Popa Daniel",
+    "lastVisit": "19.01.2025",
+    "primaryDiagnosis": "Ciroza hepatică compensată etiologie alcoolică",
+    "status": "Monitoring",
+    "nextSteps": "Ecografie abdominală + Fibroscan la 6 luni"
+  },
+  {
+    "id": 12,
+    "patientName": "Rusu Andreea",
+    "lastVisit": "14.01.2025",
+    "primaryDiagnosis": "Tiroidită Hashimoto",
+    "status": "Stable",
+    "nextSteps": "Monitorizare hormonală trimestrială"
+  },
+  {
+    "id": 13,
+    "patientName": "Stoica Adrian",
+    "lastVisit": "23.01.2025",
+    "primaryDiagnosis": "Insuficiență cardiacă clasa NYHA II",
+    "status": "Active",
+    "nextSteps": "Ajustare diuretice + Reevaluare săptămânal"
+  },
+  {
+    "id": 14,
+    "patientName": "Barbu Simona",
+    "lastVisit": "17.01.2025",
+    "primaryDiagnosis": "Colită ulceroasă + Spondilită anchilozantă",
+    "status": "Monitoring",
+    "nextSteps": "Tratament biologic continuat + IRM pelvis"
+  },
+  {
+    "id": 15,
+    "patientName": "Nica Bogdan",
+    "lastVisit": "11.01.2025",
+    "primaryDiagnosis": "Diabet zaharat tip 1 + Neuropatie diabetică",
+    "status": "Stable",
+    "nextSteps": "Control HbA1c + Consult oftalmologic anual"
+  },
+  {
+    "id": 16,
+    "patientName": "Toma Lucia",
+    "lastVisit": "06.01.2025",
+    "primaryDiagnosis": "Fibromialgie + Sindrom de oboseală cronică",
+    "status": "Stable",
+    "nextSteps": "Fizioterapie recomandată + Reevaluare peste 2 luni"
+  },
+  {
+    "id": 17,
+    "patientName": "Vasile Florin",
+    "lastVisit": "24.01.2025",
+    "primaryDiagnosis": "Epilepsie generalizată + Depresie",
+    "status": "Monitoring",
+    "nextSteps": "EEG de control + Ajustare antidepresiv"
+  },
+  {
+    "id": 18,
+    "patientName": "Iliescu Carmen",
+    "lastVisit": "13.01.2025",
+    "primaryDiagnosis": "Lupus eritematos sistemic",
+    "status": "Active",
+    "nextSteps": "Analize imunologice + Consult nefrologie"
+  },
+  {
+    "id": 19,
+    "patientName": "Dumitrescu Răzvan",
+    "lastVisit": "09.01.2025",
+    "primaryDiagnosis": "Psoriazis + Artropatie psoriazică",
+    "status": "Stable",
+    "nextSteps": "Tratament topic continuat + Fototerapie"
+  },
+  {
+    "id": 20,
+    "patientName": "Mocanu Raluca",
+    "lastVisit": "21.01.2025",
+    "primaryDiagnosis": "Scleroza multiplă forma remitent-recurentă",
+    "status": "Monitoring",
+    "nextSteps": "IRM cerebral anual + Tratament imunomodulator"
+  },
+  {
+    "id": 21,
+    "patientName": "Petre Sorin",
+    "lastVisit": "16.01.2025",
+    "primaryDiagnosis": "Insuficiență renală cronică stadiul 4",
+    "status": "Active",
+    "nextSteps": "Evaluare pentru dializă + Dieta hipoproteică"
+  },
+  {
+    "id": 22,
+    "patientName": "Tudor Daniela",
+    "lastVisit": "07.01.2025",
+    "primaryDiagnosis": "Boala Parkinson stadiul II",
+    "status": "Stable",
+    "nextSteps": "Ajustare levodopa + Kinetoterapie"
+  },
+  {
+    "id": 23,
+    "patientName": "Năstase Victor",
+    "lastVisit": "26.01.2025",
+    "primaryDiagnosis": "Hepatită cronică virală B",
+    "status": "Monitoring",
+    "nextSteps": "Virologie + Elastografie hepatică"
+  },
+  {
+    "id": 24,
+    "patientName": "Anghel Roxana",
+    "lastVisit": "04.01.2025",
+    "primaryDiagnosis": "Sindrom metabolic + Steatoză hepatică",
+    "status": "Stable",
+    "nextSteps": "Program reducere ponderală + Dietă"
+  },
+  {
+    "id": 25,
+    "patientName": "Manole Cătălin",
+    "lastVisit": "03.01.2025",
+    "primaryDiagnosis": "Fibrilație atrială permanentă",
+    "status": "Stable",
+    "nextSteps": "INR lunar + Ecocardiografie anuală"
+  },
+  {
+    "id": 26,
+    "patientName": "Sandu Mihaela",
+    "lastVisit": "01.01.2025",
+    "primaryDiagnosis": "Poliartrită reumatoidă seropozitivă",
+    "status": "Active",
+    "nextSteps": "Tratament biologic inițiat + Monitorizare lunară"
+  },
+  {
+    "id": 27,
+    "patientName": "Luca George",
+    "lastVisit": "27.12.2024",
+    "primaryDiagnosis": "Ulcer duodenal + Infecție Helicobacter pylori",
+    "status": "Monitoring",
+    "nextSteps": "Eradicare H. pylori + Control endoscopic"
+  },
+  {
+    "id": 28,
+    "patientName": "Zamfir Alina",
+    "lastVisit": "30.12.2024",
+    "primaryDiagnosis": "Glaucom cu unghi deschis + Cataractă",
+    "status": "Stable",
+    "nextSteps": "Presiune intraoculară lunar + Chirurgie cataractă programată"
+  },
+  {
+    "id": 29,
+    "patientName": "Badea Ionuț",
+    "lastVisit": "28.12.2024",
+    "primaryDiagnosis": "Pancreatită cronică alcoolică",
+    "status": "Monitoring",
+    "nextSteps": "Abstiență alcool + Enzime pancreatice"
+  },
+  {
+    "id": 30,
+    "patientName": "Ciobanu Lavinia",
+    "lastVisit": "29.12.2024",
+    "primaryDiagnosis": "Sindrom ovare polichistice + Rezistență insulină",
+    "status": "Stable",
+    "nextSteps": "Metformin continuat + Consultații endocrinologie"
+  },
+  {
+    "id": 31,
+    "patientName": "Neagu Andrei",
+    "lastVisit": "31.12.2024",
+    "primaryDiagnosis": "Boală Crohn ileocolică",
+    "status": "Active",
+    "nextSteps": "Tratament biologic + Colonoscopie control"
+  },
+  {
+    "id": 32,
+    "patientName": "Vintilă Monica",
+    "lastVisit": "26.12.2024",
+    "primaryDiagnosis": "Pneumonie interstitială idiopatică",
+    "status": "Monitoring",
+    "nextSteps": "CT torace high resolution + Spirometrie"
+  },
+  {
+    "id": 33,
+    "patientName": "Costea Emil",
+    "lastVisit": "25.12.2024",
+    "primaryDiagnosis": "Cancer prostată localizat",
+    "status": "Stable",
+    "nextSteps": "PSA trimestrial + Supraveghere activă"
+  },
+  {
+    "id": 34,
+    "patientName": "Vlad Oana",
+    "lastVisit": "24.12.2024",
+    "primaryDiagnosis": "Anemie hemolitică autoimună",
+    "status": "Active",
+    "nextSteps": "Corticoterapie ajustată + Monitorizare hemoglobină"
+  },
+  {
+    "id": 35,
+    "patientName": "Cristea Paul",
+    "lastVisit": "23.12.2024",
+    "primaryDiagnosis": "Boală venă periferică + Insuficiență venoasă cronică",
+    "status": "Stable",
+    "nextSteps": "Compresie elastică + Ecodoppler venos"
+  },
+  {
+    "id": 36,
+    "patientName": "Diaconu Nicoleta",
+    "lastVisit": "22.12.2024",
+    "primaryDiagnosis": "Endometrioză stadiul III + Dismenoree severă",
+    "status": "Monitoring",
+    "nextSteps": "Tratament hormonal + Evaluare chirurgicală"
+  },
+  {
+    "id": 37,
+    "patientName": "Enache Marius",
+    "lastVisit": "21.12.2024",
+    "primaryDiagnosis": "Scleroză laterală amiotrofică",
+    "status": "Active",
+    "nextSteps": "Rilutek continuat + Suport respirator evaluat"
+  },
+  {
+    "id": 38,
+    "patientName": "Frunză Bianca",
+    "lastVisit": "20.12.2024",
+    "primaryDiagnosis": "Hemocromatoză ereditară",
+    "status": "Stable",
+    "nextSteps": "Flebotomii terapeutice regulate + Feritină control"
+  },
+  {
+    "id": 39,
+    "patientName": "Grigore Stefan",
+    "lastVisit": "19.12.2024",
+    "primaryDiagnosis": "Miastenia gravis",
+    "status": "Monitoring",
+    "nextSteps": "Piridostigmină ajustată + EMG control"
+  },
+  {
+    "id": 40,
+    "patientName": "Horia Diana",
+    "lastVisit": "18.12.2024",
+    "primaryDiagnosis": "Porfiria acută intermitentă",
+    "status": "Stable",
+    "nextSteps": "Evitare factori declanșatori + Educație pacient"
+  },
+  {
+    "id": 41,
+    "patientName": "Ivan Claudiu",
+    "lastVisit": "17.12.2024",
+    "primaryDiagnosis": "Sindrom Sjögren primar",
+    "status": "Monitoring",
+    "nextSteps": "Lacrimi artificiale + Controale oftalmologice"
+  },
+  {
+    "id": 42,
+    "patientName": "Jianu Laura",
+    "lastVisit": "16.12.2024",
+    "primaryDiagnosis": "Boală celiacă + Dermatită herpetiformă",
+    "status": "Stable",
+    "nextSteps": "Dietă fără gluten strictă + Monitorizare anticorpi"
+  },
+  {
+    "id": 43,
+    "patientName": "Matei Valentin",
+    "lastVisit": "15.12.2024",
+    "primaryDiagnosis": "Limfom non-Hodgkin stadiul II",
+    "status": "Active",
+    "nextSteps": "Chimioterapie continuat + PET-CT control"
+  },
+  {
+    "id": 44,
+    "patientName": "Năstase Corina",
+    "lastVisit": "14.12.2024",
+    "primaryDiagnosis": "Polineuropatie diabetică + Nefropatie diabetică",
+    "status": "Monitoring",
+    "nextSteps": "Control glicemic strict + Microalbuminurie"
+  },
+  {
+    "id": 45,
+    "patientName": "Olaru Gheorghe",
+    "lastVisit": "13.12.2024",
+    "primaryDiagnosis": "Apnee somn severă + Obezitate morbidă",
+    "status": "Active",
+    "nextSteps": "CPAP nocturn + Program bariatric evaluat"
+  },
+  {
+    "id": 46,
+    "patientName": "Păun Adelina",
+    "lastVisit": "12.12.2024",
+    "primaryDiagnosis": "Feocromocitom suprarenal dreaptă",
+    "status": "Monitoring",
+    "nextSteps": "Catecolamine urinare + Evaluare chirurgie"
+  },
+  {
+    "id": 47,
+    "patientName": "Rădulescu Florian",
+    "lastVisit": "11.12.2024",
+    "primaryDiagnosis": "Trombocitoză esențială",
+    "status": "Stable",
+    "nextSteps": "Aspirină continuat + Numărare trombocite lunar"
+  },
+  {
+    "id": 48,
+    "patientName": "Sava Georgiana",
+    "lastVisit": "10.12.2024",
+    "primaryDiagnosis": "Sarcoidoză pulmonară stadiul II",
+    "status": "Monitoring",
+    "nextSteps": "Corticoterapie tapered + Radiografie torace"
+  },
+  {
+    "id": 49,
+    "patientName": "Tănase Robert",
+    "lastVisit": "09.12.2024",
+    "primaryDiagnosis": "Vasculită sistemică granulomatoză Wegener",
+    "status": "Active",
+    "nextSteps": "Imunosupresoare + ANCA control + IRM sinusuri"
+  },
+  {
+    "id": 50,
+    "patientName": "Ungureanu Sabina",
+    "lastVisit": "08.12.2024",
+    "primaryDiagnosis": "Sindrom Turner + Hipotiroidism congenital",
+    "status": "Stable",
+    "nextSteps": "Hormonoterapie substițție + Ecocardiografie anuală"
+  }
+]
