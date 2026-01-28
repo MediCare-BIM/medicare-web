@@ -36,7 +36,7 @@ const data = {
     },
     {
       title: 'Pacienti',
-      url: '/pacients',
+      url: '/dashboard/pacients',
       icon: IconUsers,
     },
     {
