@@ -155,6 +155,67 @@ export type Database = {
           },
         ]
       }
+      control_consultations: {
+        Row: {
+          appointment_id: string | null
+          diagnosis: string | null
+          doctor_id: string
+          findings: string | null
+          generated_at: string
+          id: string
+          notes: string | null
+          patient_id: string
+          treatment: string | null
+          visit_reason: string
+        }
+        Insert: {
+          appointment_id?: string | null
+          diagnosis?: string | null
+          doctor_id: string
+          findings?: string | null
+          generated_at?: string
+          id?: string
+          notes?: string | null
+          patient_id: string
+          treatment?: string | null
+          visit_reason: string
+        }
+        Update: {
+          appointment_id?: string | null
+          diagnosis?: string | null
+          doctor_id?: string
+          findings?: string | null
+          generated_at?: string
+          id?: string
+          notes?: string | null
+          patient_id?: string
+          treatment?: string | null
+          visit_reason?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "control_consultations_appointment_id_fkey"
+            columns: ["appointment_id"]
+            isOneToOne: false
+            referencedRelation: "appointments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "control_consultations_doctor_id_fkey"
+            columns: ["doctor_id"]
+            isOneToOne: false
+            referencedRelation: "doctors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "control_consultations_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       doctors: {
         Row: {
           full_name: string
@@ -188,26 +249,23 @@ export type Database = {
         Row: {
           id: string
           patient_id: string
-          result: string | null
           result_date: string
+          results: Json
           test_name: string
-          unit: string | null
         }
         Insert: {
           id?: string
           patient_id: string
-          result?: string | null
           result_date: string
+          results: Json
           test_name: string
-          unit?: string | null
         }
         Update: {
           id?: string
           patient_id?: string
-          result?: string | null
           result_date?: string
+          results?: Json
           test_name?: string
-          unit?: string | null
         }
         Relationships: [
           {
@@ -357,21 +415,21 @@ export type Database = {
           created_at: string
           doctor_id: string
           id: string
-          medication_text: string
+          medications: Json
           patient_id: string
         }
         Insert: {
           created_at?: string
           doctor_id: string
           id?: string
-          medication_text: string
+          medications: Json
           patient_id: string
         }
         Update: {
           created_at?: string
           doctor_id?: string
           id?: string
-          medication_text?: string
+          medications?: Json
           patient_id?: string
         }
         Relationships: [
