@@ -63,11 +63,11 @@ export const getAppointments = async (
 export const updateAppointment = async (
   supabase: SupabaseClient,
   appointmentId: string,
-  { start_time, end_time, notes }: { start_time: string; end_time: string; notes?: string }
+  { start_time, end_time, reason, notes }: { start_time: string; end_time: string; reason?: string; notes?: string }
 ) => {
   const { data, error } = await supabase
     .from('appointments')
-    .update({ start_time, end_time, notes })
+    .update({ start_time, end_time, reason, notes })
     .eq('id', appointmentId);
 
   return { data, error };
@@ -93,6 +93,7 @@ export const createAppointment = async (
     patient_id: string;
     start_time: string;
     end_time: string;
+    reason: string;
     notes: string;
   }
 ) => {

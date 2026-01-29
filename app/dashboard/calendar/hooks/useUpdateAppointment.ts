@@ -15,10 +15,12 @@ export function useUpdateAppointment(appointmentId: string, onDone: () => void) 
     mutationFn: async ({
       date,
       time,
+      reason,
       notes,
     }: {
       date: Date;
       time: string;
+      reason: string;
       notes: string;
     }) => {
       const [hours, minutes] = time.split(':').map(Number);
@@ -28,6 +30,7 @@ export function useUpdateAppointment(appointmentId: string, onDone: () => void) 
       return updateAppointment(supabase, appointmentId, {
         start_time: newStartDate.toISOString(),
         end_time: newEndDate.toISOString(),
+        reason: reason,
         notes: notes,
       });
     },

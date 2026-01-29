@@ -2,18 +2,8 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import {
-  ChevronLeft,
-  ChevronRight,
-  Search,
-  Calendar as CalendarIcon,
-} from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { ChevronLeft, ChevronRight, Search, Plus } from 'lucide-react';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useDebouncedCallback } from 'use-debounce';
 import { getPeriodString } from '../lib/utils';
 import { useState } from 'react';
@@ -48,17 +38,43 @@ export function CalendarHeader({
   };
 
   const handleOnViewChange = (newView: View) => {
+    if (!newView) return; // Prevent deselection
     calendarRef?.current?.getApi().changeView(newView);
     setView(newView);
   };
 
+  const getViewValue = () => {
+    switch (view) {
+      case 'dayGridMonth':
+        return 'month';
+      case 'timeGridWeek':
+        return 'week';
+      case 'timeGridDay':
+        return 'day';
+      default:
+        return 'week';
+    }
+  };
+
+  const handleToggleChange = (value: string) => {
+    if (!value) return;
+    const viewMap: Record<string, View> = {
+      month: 'dayGridMonth',
+      week: 'timeGridWeek',
+      day: 'timeGridDay',
+    };
+    handleOnViewChange(viewMap[value]);
+  };
+
   return (
     <>
-      <div className="space-y-3 p-4">
-        <h1 className="text-2xl font-semibold text-gray-800 mb-4">Calendar</h1>
-        <div className="flex flex-col md:flex-row items-center justify-between gap-3 bg-background p-4 rounded-lg shadow-sm">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center space-x-1">
+      <div className="space-y-4 p-6">
+        <h1 className="text-2xl font-semibold text-gray-800">Calendar</h1>
+
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 bg-background p-4 rounded-lg shadow-sm border">
+          {/* Left: Navigation */}
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1">
               <Button
                 variant="outline"
                 size="icon"
@@ -76,67 +92,63 @@ export function CalendarHeader({
                 <ChevronRight className="h-4 w-4" />
               </Button>
             </div>
-            <h2 className="text-lg font-semibold text-gray-700">
+            <Button variant="outline" className="h-9" onClick={handleToday}>
+              Today
+            </Button>
+            <h2 className="text-lg font-semibold text-gray-700 ml-2">
               {getPeriodString(date, view)}
             </h2>
           </div>
 
-          <div className="flex flex-wrap gap-2 w-full md:w-auto md:justify-end justify-center">
-            <div className="relative flex-grow max-w-full sm:max-w-xs">
+          {/* Center: View Switcher */}
+          <div className="flex items-center gap-3">
+            <ToggleGroup
+              type="single"
+              value={getViewValue()}
+              onValueChange={handleToggleChange}
+              className="border rounded-md"
+            >
+              <ToggleGroupItem
+                value="day"
+                aria-label="Day view"
+                className="px-4"
+              >
+                Day
+              </ToggleGroupItem>
+              <ToggleGroupItem
+                value="week"
+                aria-label="Week view"
+                className="px-4"
+              >
+                Week
+              </ToggleGroupItem>
+              <ToggleGroupItem
+                value="month"
+                aria-label="Month view"
+                className="px-4"
+              >
+                Month
+              </ToggleGroupItem>
+            </ToggleGroup>
+          </div>
+
+          {/* Right: Search & Actions */}
+          <div className="flex items-center gap-2">
+            <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
               <Input
                 type="search"
                 placeholder="Search appointments..."
-                className="pl-9 pr-3 py-2 border rounded-md w-full"
+                className="pl-9 pr-3 h-9 w-[240px]"
                 onChange={(e) => handleSearch(e.target.value)}
               />
             </div>
             <Button
-              variant="outline"
-              className="px-3 py-2 text-sm"
-              onClick={handleToday}
-            >
-              Today
-            </Button>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="flex items-center space-x-1 px-3 py-2 text-sm"
-                >
-                  <CalendarIcon className="h-4 w-4" />
-                  <span>
-                    {view === 'dayGridMonth'
-                      ? 'Month'
-                      : view === 'timeGridWeek'
-                      ? 'Week'
-                      : 'Day'}
-                  </span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem
-                  onClick={() => handleOnViewChange('timeGridWeek')}
-                >
-                  Week
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => handleOnViewChange('dayGridMonth')}
-                >
-                  Month
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => handleOnViewChange('timeGridDay')}
-                >
-                  Day
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <Button
-              className="bg-blue-600 text-white hover:bg-blue-700 px-3 py-2 text-sm"
+              className="bg-primary hover:bg-primary/90 h-9"
               onClick={() => setIsAddDialogOpen(true)}
             >
-              <span>+ Add Appointment</span>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Appointment
             </Button>
           </div>
         </div>

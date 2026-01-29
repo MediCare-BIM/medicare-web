@@ -13,6 +13,7 @@ export function useAppointmentForm(
     appointment ? format(new Date(appointment.start_time), 'HH:mm') : ''
   );
   const [notes, setNotes] = useState<string>(appointment?.notes || '');
+  const [reason, setReason] = useState<string>(appointment?.reason || '');
   const [patientId, setPatientId] = useState<string | undefined>(
     appointment?.patient_id
   );
@@ -25,6 +26,7 @@ export function useAppointmentForm(
       setDate(new Date(appointment.start_time));
       setTime(format(new Date(appointment.start_time), 'HH:mm'));
       setNotes(appointment.notes || '');
+      setReason(appointment.reason || '');
       setPatientId(appointment.patient_id);
     }
   }, [appointment]);
@@ -46,6 +48,7 @@ export function useAppointmentForm(
     date,
     time,
     notes,
+    reason,
     patientId,
   };
 
@@ -53,6 +56,7 @@ export function useAppointmentForm(
     setDate: handleDateSelect,
     setTime,
     setNotes,
+    setReason,
     setPatientId,
   };
 

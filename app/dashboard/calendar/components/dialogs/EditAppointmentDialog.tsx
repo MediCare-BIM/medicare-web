@@ -33,10 +33,11 @@ export function EditAppointmentDialog({
   );
 
   const handleSave = () => {
-    if (formData.date && formData.time) {
+    if (formData.date && formData.time && formData.reason.trim()) {
       mutate({
         date: formData.date,
         time: formData.time,
+        reason: formData.reason,
         notes: formData.notes,
       });
     }
@@ -70,8 +71,10 @@ export function EditAppointmentDialog({
             disabled={
               isPending ||
               formData.patientId === undefined ||
-              formData.time === ''
+              formData.time === '' ||
+              !formData.reason.trim()
             }
+            className="bg-primary hover:bg-primary/90"
           >
             {isPending ? 'Se salvează...' : 'Salvează'}
           </Button>
