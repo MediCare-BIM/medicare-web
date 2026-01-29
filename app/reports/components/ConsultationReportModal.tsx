@@ -8,6 +8,11 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { useConsultationForm } from './ConsultationFormContext';
 import { PatientDetailsStep } from './PatientDetailsStep';
 import { ConsultationDetailsStep } from './ConsultationDetailsStep';
@@ -19,11 +24,13 @@ import { Sparkles } from 'lucide-react';
 interface ConsultationReportModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onSuccess?: () => void;
 }
 
 export function ConsultationReportModal({
   open,
   onOpenChange,
+  onSuccess,
 }: ConsultationReportModalProps) {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -128,6 +135,7 @@ export function ConsultationReportModal({
 
       if (!user) {
         toast.error('Nu ești autentificat');
+        setIsSubmitting(false);
         return;
       }
 
@@ -140,6 +148,7 @@ export function ConsultationReportModal({
 
       if (doctorError || !doctorData) {
         toast.error('Eroare la obținerea informațiilor despre doctor');
+        setIsSubmitting(false);
         return;
       }
 
@@ -163,8 +172,8 @@ export function ConsultationReportModal({
       toast.success('Raportul a fost generat cu succes');
       handleClose();
 
-      // Refresh the page to show the new report
-      window.location.reload();
+      // Trigger refresh callback
+      onSuccess?.();
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Error submitting consultation:', error);
@@ -239,14 +248,26 @@ export function ConsultationReportModal({
           </Button>
           <div className="flex gap-2">
             {(currentStep === 2 || currentStep === 3) && (
-              <Button
-                onClick={handleAICompletion}
-                disabled={isAILoading}
-                className="border border-primary text-primary bg-background shadow-xs hover:bg-primary/10 hover:text-primary dark:bg-input/30 dark:border-primary dark:hover:bg-primary/10"
-              >
-                <Sparkles className="mr-2 h-4 w-4" />
-                {isAILoading ? 'Se completează...' : 'Completează cu AI'}
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    onClick={handleAICompletion}
+                    disabled={isAILoading}
+                  >
+                    <Sparkles className="mr-2 h-4 w-4" />
+                    {isAILoading ? 'Se completează...' : 'Completează cu AI'}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent
+                  side="top"
+                  sideOffset={8}
+                  className="bg-white dark:bg-white text-black dark:text-black border border-gray-200 shadow-md max-w-[280px] text-left"
+                >
+                  Completează pe baza documentelor existente. Vei putea revizui
+                  înainte de generare.
+                </TooltipContent>
+              </Tooltip>
             )}
             {currentStep < 3 ? (
               <Button onClick={handleNext}>Continuă</Button>

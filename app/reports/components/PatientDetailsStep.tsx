@@ -25,6 +25,7 @@ import { cn } from '@/lib/utils';
 import { CalendarIcon, Check, ChevronsUpDown } from 'lucide-react';
 import { format } from 'date-fns';
 import { createClient } from '@/lib/supabase/client';
+import { toast } from 'sonner';
 import {
   Command,
   CommandEmpty,
@@ -49,6 +50,7 @@ export function PatientDetailsStep() {
   const { formData, updateFormData } = useConsultationForm();
   const [patients, setPatients] = useState<Patient[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -59,7 +61,10 @@ export function PatientDetailsStep() {
         .select('id, full_name')
         .order('full_name');
 
-      if (!error && data) {
+      if (error) {
+        toast.error('Eroare la încărcarea pacienților');
+        setError(true);
+      } else if (data) {
         setPatients(data);
       }
       setLoading(false);
@@ -92,7 +97,11 @@ export function PatientDetailsStep() {
             <Command>
               <CommandInput placeholder="Caută pacient..." />
               <CommandEmpty>
-                {loading ? 'Se încarcă...' : 'Nu s-au găsit pacienți.'}
+                {loading
+                  ? 'Se încarcă...'
+                  : error
+                    ? 'Eroare la încărcarea pacienților'
+                    : 'Nu s-au găsit pacienți.'}
               </CommandEmpty>
               <CommandGroup className="max-h-64 overflow-auto">
                 {patients.map((patient) => (
@@ -145,6 +154,7 @@ export function PatientDetailsStep() {
               mode="single"
               selected={formData.consultationDate}
               onSelect={(date) => updateFormData({ consultationDate: date })}
+              disabled={{ after: new Date() }}
               initialFocus
             />
           </PopoverContent>

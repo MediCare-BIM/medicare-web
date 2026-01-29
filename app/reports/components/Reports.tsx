@@ -25,6 +25,7 @@ import {
 import { Report } from '@/lib/types';
 import { ChevronDown, FileText, Search } from 'lucide-react';
 import { useState, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { ReportsTable } from './ReportsTable';
 import { ConsultationFormProvider } from './ConsultationFormContext';
 import { ConsultationReportModal } from './ConsultationReportModal';
@@ -40,9 +41,15 @@ const reportTypeOptions = [
 ];
 
 export function Reports({ reports }: ReportsProps) {
+  const router = useRouter();
   const [selectedType, setSelectedType] = useState<string>('Toate tipurile');
   const [searchQuery, setSearchQuery] = useState('');
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
+
+  const handleConsultationSuccess = () => {
+    // Refresh server component data without full page reload
+    router.refresh();
+  };
 
   const filteredReports = useMemo(() => {
     let filtered = reports;
@@ -69,6 +76,7 @@ export function Reports({ reports }: ReportsProps) {
         <ConsultationReportModal
           open={isConsultationModalOpen}
           onOpenChange={setIsConsultationModalOpen}
+          onSuccess={handleConsultationSuccess}
         />
 
         <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
@@ -135,9 +143,9 @@ export function Reports({ reports }: ReportsProps) {
                             Consultație
                           </DropdownMenuItem>
                           <DropdownMenuItem
-                            onClick={() =>
-                              console.log('Generate "Prescripție" report')
-                            }
+                            onClick={() => {
+                              // TODO: Implement prescription report generation
+                            }}
                           >
                             Prescripție
                           </DropdownMenuItem>

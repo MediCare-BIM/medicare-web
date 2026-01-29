@@ -144,48 +144,11 @@ export function CalendarHeader({
               />
             </div>
             <Button
-              variant="outline"
-              className="px-3 py-2 text-sm"
-              onClick={handleToday}
+              className="bg-primary hover:bg-primary/90 h-9"
+              onClick={() => setIsAddDialogOpen(true)}
             >
-              Today
-            </Button>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="flex items-center space-x-1 px-3 py-2 text-sm"
-                >
-                  <CalendarIcon className="h-4 w-4" />
-                  <span>
-                    {view === 'dayGridMonth'
-                      ? 'Month'
-                      : view === 'timeGridWeek'
-                        ? 'Week'
-                        : 'Day'}
-                  </span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem
-                  onClick={() => handleOnViewChange('timeGridWeek')}
-                >
-                  Week
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => handleOnViewChange('dayGridMonth')}
-                >
-                  Month
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => handleOnViewChange('timeGridDay')}
-                >
-                  Day
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <Button onClick={() => setIsAddDialogOpen(true)}>
-              <span>+ Add Appointment</span>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Appointment
             </Button>
           </div>
         </div>
