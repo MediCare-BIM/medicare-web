@@ -19,6 +19,7 @@ import { format } from 'date-fns';
 import { IconCalendar } from '@tabler/icons-react';
 import { cn } from '@/lib/utils';
 import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
 import { usePatients } from '../../hooks/usePatients';
 import { useAppointmentForm } from '../../hooks/useAppointmentForm';
 import { AppointmentRow } from '../../lib/requests';
@@ -37,15 +38,15 @@ export function AppointmentForm({
   formState,
 }: AppointmentFormProps) {
   const { data: patients, isLoading: isLoadingPatients } = usePatients();
-  const { date, time, notes, patientId } = formData;
-  const { setDate, setTime, setNotes, setPatientId } = formHandlers;
+  const { date, time, notes, reason, patientId } = formData;
+  const { setDate, setTime, setNotes, setReason, setPatientId } = formHandlers;
   const { availableTimes, isLoadingTimes } = formState;
 
   return (
     <div className="flex w-full flex-col gap-4">
       <div>
         <Label htmlFor="patient" className="text-left md:text-right">
-          Pacient
+          Pacient <span className="text-red-500">*</span>
         </Label>
         <Select
           onValueChange={setPatientId}
@@ -71,7 +72,7 @@ export function AppointmentForm({
       <div className="flex flex-col md:flex-row gap-4">
         <div className="grid grid-cols-1 gap-2 flex-1">
           <Label htmlFor="date" className="text-left md:text-right">
-            Modifică data programării
+            Modifică data programării <span className="text-red-500">*</span>
           </Label>
           <Popover>
             <PopoverTrigger asChild>
@@ -98,7 +99,7 @@ export function AppointmentForm({
         </div>
         <div className="grid grid-cols-1 gap-2 flex-1">
           <Label htmlFor="time" className="text-left md:text-right">
-            Modifică ora programării
+            Modifică ora programării <span className="text-red-500">*</span>
           </Label>
           <Select
             onValueChange={setTime}
@@ -117,6 +118,20 @@ export function AppointmentForm({
             </SelectContent>
           </Select>
         </div>
+      </div>
+
+      <div>
+        <Label htmlFor="reason" className="text-left">
+          Motivul prezentării <span className="text-red-500">*</span>
+        </Label>
+        <Input
+          id="reason"
+          value={reason}
+          onChange={(e) => setReason(e.target.value)}
+          placeholder="De exemplu: Control periodic, Dureri de cap, etc."
+          className="mt-2"
+          required
+        />
       </div>
 
       <div>

@@ -28,9 +28,9 @@ export function AddAppointmentDialog({
   const { mutate, isPending } = useCreateAppointment();
 
   const handleSave = () => {
-    const { date, time, patientId, notes } = formData;
+    const { date, time, patientId, reason, notes } = formData;
 
-    if (!date || !time || !patientId) {
+    if (!date || !time || !patientId || !reason) {
       return;
     }
 
@@ -43,6 +43,7 @@ export function AddAppointmentDialog({
         patient_id: patientId,
         start_time: startTime.toISOString(),
         end_time: endTime.toISOString(),
+        reason: reason,
         notes: notes,
       },
       {
@@ -79,8 +80,10 @@ export function AddAppointmentDialog({
             disabled={
               isPending ||
               formData.patientId === undefined ||
-              formData.time === ''
+              formData.time === '' ||
+              !formData.reason.trim()
             }
+            className="bg-primary hover:bg-primary/90"
           >
             {isPending ? 'Se salvează...' : 'Salvează'}
           </Button>

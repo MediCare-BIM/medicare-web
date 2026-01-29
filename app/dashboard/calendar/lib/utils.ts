@@ -6,16 +6,17 @@ export const transformAppointmentsToEvents = (
   appointments: AppointmentRow[]
 ): EventInput[] => {
   return appointments.map((appointment) => ({
-    title: `${appointment.reason}`,
-    start: `${appointment.start_time}`,
-    end: `${appointment.end_time}`,
+    title: appointment.reason || 'General Consultation',
+    start: appointment.start_time,
+    end: appointment.end_time,
     extendedProps: {
       appointmentId: appointment.id,
       patientName: appointment.patient_full_name,
-      appointmentType: "General",
+      reason: appointment.reason || 'General Consultation',
+      appointmentType: 'General',
     },
-  }))
-}
+  }));
+};
 
 export const getPeriodString = (
   date: Date,

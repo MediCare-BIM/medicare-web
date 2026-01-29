@@ -11,7 +11,8 @@ export function useCreateAppointment() {
     mutationFn: async (appointment: {
       patient_id: string;
       start_time: string;
-      end_time: string; // expecting end_time
+      end_time: string;
+      reason: string;
       notes: string;
     }) => {
       const supabase = createClient();

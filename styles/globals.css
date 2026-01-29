@@ -236,12 +236,13 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background-color: hsl(var(--primary));
-  color: white;
-  margin-left: 4px;
+  color: hsl(var(--primary-foreground));
+  font-weight: 600;
+  font-size: 0.875rem;
 }
 
 .fc-timegrid-slot-label-cushion {
@@ -263,4 +264,46 @@
 
 .fc-event-title {
   white-space: normal;
+}
+
+/* Current time indicator */
+.fc-timegrid-now-indicator-line {
+  border-top: 2px solid hsl(var(--primary));
+  opacity: 0.8;
+}
+
+.fc-timegrid-now-indicator-arrow {
+  border-color: hsl(var(--primary));
+  opacity: 0.8;
+}
+
+/* Improve grid contrast */
+.fc-timegrid-slot-lane {
+  @apply border-gray-100;
+}
+
+.fc .fc-timegrid-col.fc-day-today {
+  background-color: hsl(var(--primary) / 0.02);
+}
+
+/* Event styling */
+.fc-event {
+  @apply border-none;
+}
+
+.fc-event-main {
+  @apply bg-indigo-50 border-l-4 border-indigo-600 overflow-hidden;
+}
+
+.fc-event-main-frame {
+  @apply overflow-hidden;
+}
+
+.fc-event-title-container {
+  @apply overflow-hidden;
+}
+
+.fc-event-title {
+  white-space: normal;
+  @apply overflow-hidden;
 }
