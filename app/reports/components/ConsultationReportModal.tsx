@@ -13,13 +13,17 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { useConsultationForm } from './ConsultationFormContext';
+import {
+  useConsultationForm,
+  type ConsultationFormData,
+} from './ConsultationFormContext';
 import { PatientDetailsStep } from './PatientDetailsStep';
 import { ConsultationDetailsStep } from './ConsultationDetailsStep';
 import { PlanRecommendationsStep } from './PlanRecommendationsStep';
 import { createClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
 import { Sparkles } from 'lucide-react';
+import { useConsultationAI } from './useConsultationAI';
 
 interface ConsultationReportModalProps {
   open: boolean;
@@ -34,8 +38,8 @@ export function ConsultationReportModal({
 }: ConsultationReportModalProps) {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isAILoading, setIsAILoading] = useState(false);
-  const { formData, resetForm } = useConsultationForm();
+  const { formData, updateFormData, resetForm } = useConsultationForm();
+  const { isLoading: isAILoading, generateCompletion } = useConsultationAI();
 
   const steps = [
     { number: 1, label: 'Detalii pacient' },
@@ -90,34 +94,25 @@ export function ConsultationReportModal({
   };
 
   const handleAICompletion = async () => {
-    setIsAILoading(true);
+    const result = await generateCompletion({
+      patientId: formData.patientId,
+      consultationPurpose: formData.consultationPurpose,
+      visitReason: formData.visitReason,
+      findings: formData.findings,
+      diagnosis: formData.diagnosis,
+      treatment: formData.treatment,
+      investigations: formData.investigations,
+      notes: formData.notes,
+    });
 
-    // Placeholder for AI completion functionality
-    // In the future, this could call an AI API to generate recommendations
-    // based on the patient details and consultation findings
+    if (result) {
+      const updates: Partial<ConsultationFormData> = {};
 
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      if (result.diagnosis) updates.diagnosis = result.diagnosis;
+      if (result.treatment) updates.treatment = result.treatment;
+      if (result.investigations) updates.investigations = result.investigations;
 
-      // For now, just show that the feature is connected
-      // eslint-disable-next-line no-console
-      console.log('AI Completion triggered with data:', {
-        patientId: formData.patientId,
-        visitReason: formData.visitReason,
-        findings: formData.findings,
-        diagnosis: formData.diagnosis,
-      });
-
-      // Could update form with AI suggestions here
-      // updateFormData({ treatment: '...', investigations: '...', notes: '...' });
-      toast.success('Funcția AI va fi disponibilă în curând');
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('AI Completion error:', error);
-      toast.error('Eroare la completarea cu AI');
-    } finally {
-      setIsAILoading(false);
+      updateFormData(updates);
     }
   };
 
@@ -234,8 +229,12 @@ export function ConsultationReportModal({
         {/* Step content */}
         <div className="py-4">
           {currentStep === 1 && <PatientDetailsStep />}
-          {currentStep === 2 && <ConsultationDetailsStep />}
-          {currentStep === 3 && <PlanRecommendationsStep />}
+          {currentStep === 2 && (
+            <ConsultationDetailsStep disableSteps={isAILoading} />
+          )}
+          {currentStep === 3 && (
+            <PlanRecommendationsStep disableSteps={isAILoading} />
+          )}
         </div>
 
         {/* Action buttons */}
