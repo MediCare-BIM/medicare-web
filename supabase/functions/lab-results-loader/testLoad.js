@@ -5,10 +5,11 @@ const fs = require('fs');
 const path = require('path');
 
 // Configuration
-const EDGE_FUNCTION_URL = 'https://qgg...';
-const API_KEY = 'UUeI...';
-const PATIENT_ID = 'd412...';
+const EDGE_FUNCTION_URL = 'https://qggaetvrfdqazgmyqgxi.supabase.co/functions/v1/lab-results-loader';
+const API_KEY = '...';
+const PATIENT_ID = 'd41223f9-7572-451c-9ac0-f0cf1d84ab3d';
 const OVERRIDE = true;
+const EARLY_RETURN = true; // Set to true to return basic results immediately while processing explanations in background
 
 async function uploadPDF() {
     try {
@@ -29,12 +30,16 @@ async function uploadPDF() {
         if (OVERRIDE) {
             formData.append('override', 'true');
         }
+        if (EARLY_RETURN) {
+            formData.append('earlyReturn', 'true');
+        }
 
         console.log('File:', 'example.pdf');
         console.log('Size:', (pdfBuffer.length / 1024).toFixed(2), 'KB');
         console.log('API Key:', API_KEY.substring(0, 5) + '...');
         console.log('Patient ID:', PATIENT_ID);
         console.log('Override:', OVERRIDE ? 'Yes (will delete existing results)' : 'No');
+        console.log('Early Return:', EARLY_RETURN ? 'Yes (basic results only, explanations in background)' : 'No');
         console.log('\nUploading...\n');
 
         const response = await fetch(EDGE_FUNCTION_URL, {
