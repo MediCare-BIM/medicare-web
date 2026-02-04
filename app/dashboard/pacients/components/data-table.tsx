@@ -597,11 +597,11 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
 
   return (
     <Drawer direction={isMobile ? 'bottom' : 'right'}>
-      <DrawerTrigger asChild>
+      <Link href={`/dashboard/pacients/${item.id}`}>
         <Button variant="link" className="text-foreground w-fit px-0 text-left">
           {item.patientName}
         </Button>
-      </DrawerTrigger>
+      </Link>
       <DrawerContent>
         <DrawerHeader className="gap-1">
           <DrawerTitle>{item.patientName}</DrawerTitle>
