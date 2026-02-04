@@ -42,7 +42,9 @@ export function ReportsTable({ reports }: ReportsTableProps) {
                 year: 'numeric',
               })}
             </TableCell>
-            <TableCell>{report.diagnosis}</TableCell>
+            <TableCell>
+              <div className="max-w-[300px] truncate">{report.diagnosis}</div>
+            </TableCell>
             <TableCell>
               <ReportTypeBadge type={report.type} />
             </TableCell>

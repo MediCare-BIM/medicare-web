@@ -5,7 +5,13 @@ import { useConsultationForm } from './ConsultationFormContext';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 
-export function PlanRecommendationsStep() {
+interface PlanRecommendationsStepProps {
+  disableSteps?: boolean;
+}
+
+export function PlanRecommendationsStep({
+  disableSteps = false,
+}: PlanRecommendationsStepProps) {
   const { formData, updateFormData } = useConsultationForm();
 
   return (
@@ -18,6 +24,7 @@ export function PlanRecommendationsStep() {
           value={formData.treatment}
           onChange={(e) => updateFormData({ treatment: e.target.value })}
           rows={4}
+          disabled={disableSteps}
         />
       </div>
 
@@ -31,6 +38,7 @@ export function PlanRecommendationsStep() {
           value={formData.investigations}
           onChange={(e) => updateFormData({ investigations: e.target.value })}
           rows={4}
+          disabled={disableSteps}
         />
       </div>
 
@@ -42,6 +50,7 @@ export function PlanRecommendationsStep() {
           value={formData.notes}
           onChange={(e) => updateFormData({ notes: e.target.value })}
           rows={4}
+          disabled={disableSteps}
         />
       </div>
     </div>
