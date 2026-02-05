@@ -243,7 +243,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
   {
     id: 'actions',
     cell: ({ row }) => (
-      <Link href={`/dashboard/pacients/${row.original.patient_id}`}>
+      <Link href={`/dashboard/patients/${row.original.patient_id}`}>
         <Button
           variant="ghost"
           className="text-primary flex size-8"
@@ -603,7 +603,7 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
 
   return (
     <Drawer direction={isMobile ? 'bottom' : 'right'}>
-      <Link href={`/dashboard/pacients/${item.patient_id}`}>
+      <Link href={`/dashboard/patients/${item.patient_id}`}>
         <Button variant="link" className="text-foreground w-fit px-0 text-left">
           {item.full_name}
         </Button>
