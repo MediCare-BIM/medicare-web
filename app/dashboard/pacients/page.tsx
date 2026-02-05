@@ -21,10 +21,10 @@ export default async function Page() {
     );
   }
 
-  // Add default status for each patient
+  // Ensure each patient has a status; preserve existing status if present
   const patientsWithStatus = (data || []).map((patient) => ({
     ...patient,
-    status: 'Active', // Default status
+    status: patient.status ?? 'Active', // Default to 'Active' only when status is missing
   }));
 
   return (
