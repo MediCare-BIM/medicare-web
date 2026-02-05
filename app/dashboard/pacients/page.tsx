@@ -16,7 +16,20 @@ export default async function Page() {
         <h2 className="text-2xl font-bold tracking-tight pl-4 lg:pl-6 my-2">
           Istoric pacienți
         </h2>
-        <div className="p-4">Error loading patients data</div>
+        <div className="p-4">
+          <p className="mb-2 text-sm text-red-600">
+            Unable to load patient data. Please try refreshing this page.
+          </p>
+          <p className="mb-4 text-xs text-muted-foreground">
+            If the problem persists, please contact support.
+          </p>
+          <a
+            href=""
+            className="inline-flex items-center rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground shadow hover:bg-primary/90"
+          >
+            Retry loading data
+          </a>
+        </div>
       </div>
     );
   }
