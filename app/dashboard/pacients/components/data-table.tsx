@@ -104,7 +104,7 @@ import Link from 'next/link';
 
 export const schema = z.object({
   patient_id: z.string(),
-  full_name: z.string().nullable(),
+  full_name: z.string(),
   last_visit: z.string().nullable(),
   diagnosis: z.string().nullable(),
   treatment: z.string().nullable(),
