@@ -38,6 +38,13 @@ export type Database = {
             foreignKeyName: "ai_summaries_patient_id_fkey"
             columns: ["patient_id"]
             isOneToOne: true
+            referencedRelation: "patient_table_view"
+            referencedColumns: ["patient_id"]
+          },
+          {
+            foreignKeyName: "ai_summaries_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: true
             referencedRelation: "patients"
             referencedColumns: ["id"]
           },
@@ -63,6 +70,13 @@ export type Database = {
           severity?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "allergies_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patient_table_view"
+            referencedColumns: ["patient_id"]
+          },
           {
             foreignKeyName: "allergies_patient_id_fkey"
             columns: ["patient_id"]
@@ -121,6 +135,13 @@ export type Database = {
             foreignKeyName: "appointments_patient_id_fkey"
             columns: ["patient_id"]
             isOneToOne: false
+            referencedRelation: "patient_table_view"
+            referencedColumns: ["patient_id"]
+          },
+          {
+            foreignKeyName: "appointments_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
             referencedRelation: "patients"
             referencedColumns: ["id"]
           },
@@ -146,6 +167,13 @@ export type Database = {
           status?: Database["public"]["Enums"]["condition_status"]
         }
         Relationships: [
+          {
+            foreignKeyName: "conditions_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patient_table_view"
+            referencedColumns: ["patient_id"]
+          },
           {
             foreignKeyName: "conditions_patient_id_fkey"
             columns: ["patient_id"]
@@ -206,6 +234,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "doctors"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "control_consultations_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patient_table_view"
+            referencedColumns: ["patient_id"]
           },
           {
             foreignKeyName: "control_consultations_patient_id_fkey"
@@ -272,6 +307,13 @@ export type Database = {
             foreignKeyName: "lab_results_patient_id_fkey"
             columns: ["patient_id"]
             isOneToOne: false
+            referencedRelation: "patient_table_view"
+            referencedColumns: ["patient_id"]
+          },
+          {
+            foreignKeyName: "lab_results_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
             referencedRelation: "patients"
             referencedColumns: ["id"]
           },
@@ -321,6 +363,13 @@ export type Database = {
             foreignKeyName: "medical_notes_patient_id_fkey"
             columns: ["patient_id"]
             isOneToOne: false
+            referencedRelation: "patient_table_view"
+            referencedColumns: ["patient_id"]
+          },
+          {
+            foreignKeyName: "medical_notes_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
             referencedRelation: "patients"
             referencedColumns: ["id"]
           },
@@ -365,6 +414,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "doctors"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "medical_reports_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patient_table_view"
+            referencedColumns: ["patient_id"]
           },
           {
             foreignKeyName: "medical_reports_patient_id_fkey"
@@ -444,6 +500,13 @@ export type Database = {
             foreignKeyName: "prescriptions_patient_id_fkey"
             columns: ["patient_id"]
             isOneToOne: false
+            referencedRelation: "patient_table_view"
+            referencedColumns: ["patient_id"]
+          },
+          {
+            foreignKeyName: "prescriptions_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
             referencedRelation: "patients"
             referencedColumns: ["id"]
           },
@@ -469,7 +532,30 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      patient_table_view: {
+        Row: {
+          diagnosis: string | null
+          full_name: string | null
+          last_visit: string | null
+          patient_id: string | null
+          treatment: string | null
+        }
+        Insert: {
+          diagnosis?: never
+          full_name?: string | null
+          last_visit?: never
+          patient_id?: string | null
+          treatment?: never
+        }
+        Update: {
+          diagnosis?: never
+          full_name?: string | null
+          last_visit?: never
+          patient_id?: string | null
+          treatment?: never
+        }
+        Relationships: []
+      }
     }
     Functions: {
       get_user_role: { Args: { user_id: string }; Returns: string }

@@ -103,16 +103,16 @@ import {
 import Link from 'next/link';
 
 export const schema = z.object({
-  id: z.number(),
-  patientName: z.string(),
-  lastVisit: z.string(),
-  primaryDiagnosis: z.string(),
-  status: z.string(),
-  nextSteps: z.string(),
+  patient_id: z.string(),
+  full_name: z.string().nullable(),
+  last_visit: z.string().nullable(),
+  diagnosis: z.string().nullable(),
+  treatment: z.string().nullable(),
+  status: z.string().default('Active'),
 });
 
 // Create a separate component for the drag handle
-function DragHandle({ id }: { id: number }) {
+function DragHandle({ id }: { id: string }) {
   const { attributes, listeners } = useSortable({
     id,
   });
@@ -135,7 +135,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
   {
     id: 'drag',
     header: () => null,
-    cell: ({ row }) => <DragHandle id={row.original.id} />,
+    cell: ({ row }) => <DragHandle id={row.original.patient_id} />,
   },
   {
     id: 'select',
@@ -164,7 +164,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: 'patientName',
+    accessorKey: 'full_name',
     header: 'Nume pacient',
     cell: ({ row }) => {
       return <TableCellViewer item={row.original} />;
@@ -172,17 +172,23 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: 'lastVisit',
+    accessorKey: 'last_visit',
     header: 'Ultima vizită',
     cell: ({ row }) => (
-      <div className="text-muted-foreground">{row.original.lastVisit}</div>
+      <div className="text-muted-foreground">
+        {row.original.last_visit
+          ? new Date(row.original.last_visit).toLocaleDateString('ro-RO')
+          : 'N/A'}
+      </div>
     ),
   },
   {
-    accessorKey: 'primaryDiagnosis',
+    accessorKey: 'diagnosis',
     header: 'Diagnostic principal',
     cell: ({ row }) => (
-      <div className="max-w-md text-sm">{row.original.primaryDiagnosis}</div>
+      <div className="max-w-xs text-sm truncate">
+        {row.original.diagnosis || 'N/A'}
+      </div>
     ),
   },
   {
@@ -226,18 +232,18 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     },
   },
   {
-    accessorKey: 'nextSteps',
+    accessorKey: 'treatment',
     header: 'Următorii pași',
     cell: ({ row }) => (
-      <div className="max-w-md text-sm text-muted-foreground">
-        {row.original.nextSteps}
+      <div className="max-w-xs text-sm text-muted-foreground truncate">
+        {row.original.treatment || 'N/A'}
       </div>
     ),
   },
   {
     id: 'actions',
     cell: ({ row }) => (
-      <Link href={`/dashboard/pacients/${row.original.id}`}>
+      <Link href={`/dashboard/pacients/${row.original.patient_id}`}>
         <Button
           variant="ghost"
           className="text-primary flex size-8"
@@ -253,7 +259,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
 
 function DraggableRow({ row }: { row: Row<z.infer<typeof schema>> }) {
   const { transform, transition, setNodeRef, isDragging } = useSortable({
-    id: row.original.id,
+    id: row.original.patient_id,
   });
 
   return (
@@ -318,15 +324,15 @@ export function DataTable({
     const searchLower = globalFilter.toLowerCase();
     return filteredData.filter(
       (item) =>
-        item.patientName.toLowerCase().includes(searchLower) ||
-        item.primaryDiagnosis.toLowerCase().includes(searchLower) ||
-        item.nextSteps.toLowerCase().includes(searchLower) ||
-        item.lastVisit.toLowerCase().includes(searchLower)
+        item.full_name?.toLowerCase().includes(searchLower) ||
+        item.diagnosis?.toLowerCase().includes(searchLower) ||
+        item.treatment?.toLowerCase().includes(searchLower) ||
+        item.last_visit?.toLowerCase().includes(searchLower)
     );
   }, [filteredData, globalFilter]);
 
   const dataIds = React.useMemo<UniqueIdentifier[]>(
-    () => searchFilteredData?.map(({ id }) => id) || [],
+    () => searchFilteredData?.map(({ patient_id }) => patient_id) || [],
     [searchFilteredData]
   );
 
@@ -340,7 +346,7 @@ export function DataTable({
       columnFilters,
       pagination,
     },
-    getRowId: (row) => row.id.toString(),
+    getRowId: (row) => row.patient_id,
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
@@ -597,14 +603,14 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
 
   return (
     <Drawer direction={isMobile ? 'bottom' : 'right'}>
-      <Link href={`/dashboard/pacients/${item.id}`}>
+      <Link href={`/dashboard/pacients/${item.patient_id}`}>
         <Button variant="link" className="text-foreground w-fit px-0 text-left">
-          {item.patientName}
+          {item.full_name}
         </Button>
       </Link>
       <DrawerContent>
         <DrawerHeader className="gap-1">
-          <DrawerTitle>{item.patientName}</DrawerTitle>
+          <DrawerTitle>{item.full_name}</DrawerTitle>
           <DrawerDescription>
             Patient information and medical history
           </DrawerDescription>
@@ -655,7 +661,10 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
               <Separator />
               <div className="grid gap-2">
                 <div className="flex gap-2 leading-none font-medium">
-                  Last visit: {item.lastVisit}{' '}
+                  Last visit:{' '}
+                  {item.last_visit
+                    ? new Date(item.last_visit).toLocaleDateString('ro-RO')
+                    : 'N/A'}{' '}
                   <IconTrendingUp className="size-4" />
                 </div>
                 <div className="text-muted-foreground">
@@ -669,12 +678,19 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
           <form className="flex flex-col gap-4">
             <div className="flex flex-col gap-3">
               <Label htmlFor="patientName">Nume pacient</Label>
-              <Input id="patientName" defaultValue={item.patientName} />
+              <Input id="patientName" defaultValue={item.full_name || ''} />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-3">
                 <Label htmlFor="lastVisit">Ultima vizită</Label>
-                <Input id="lastVisit" defaultValue={item.lastVisit} />
+                <Input
+                  id="lastVisit"
+                  defaultValue={
+                    item.last_visit
+                      ? new Date(item.last_visit).toLocaleDateString('ro-RO')
+                      : ''
+                  }
+                />
               </div>
               <div className="flex flex-col gap-3">
                 <Label htmlFor="status">Status</Label>
@@ -694,12 +710,12 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
               <Label htmlFor="primaryDiagnosis">Diagnostic principal</Label>
               <Input
                 id="primaryDiagnosis"
-                defaultValue={item.primaryDiagnosis}
+                defaultValue={item.diagnosis || ''}
               />
             </div>
             <div className="flex flex-col gap-3">
               <Label htmlFor="nextSteps">Următorii pași</Label>
-              <Input id="nextSteps" defaultValue={item.nextSteps} />
+              <Input id="nextSteps" defaultValue={item.treatment || ''} />
             </div>
           </form>
         </div>
