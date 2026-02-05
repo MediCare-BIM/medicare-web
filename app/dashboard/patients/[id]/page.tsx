@@ -2,9 +2,6 @@ import { createClient } from '@/lib/supabase/server';
 import { PatientPageClient } from './components/PatientPageClient';
 import { formatDate, calculateAge } from './components/utils';
 
-// Hardcoded patient ID for testing
-const HARDCODED_PATIENT_ID = 'fbd9e6f5-d906-4c37-9268-bbcc41ca2e61';
-
 type TimelineItemType = 'consultatie' | 'analiza' | 'prescriptie';
 
 interface TimelineItem {
@@ -35,8 +32,8 @@ export default async function PatientPage({
   const supabase = await createClient();
   const resolvedParams = await params;
 
-  // Use hardcoded ID instead of URL param
-  const patientId = HARDCODED_PATIENT_ID;
+  // Use patient ID from URL params
+  const patientId = resolvedParams.id;
 
   // Fetch patient data
   const { data: patient } = await supabase
