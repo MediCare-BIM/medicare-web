@@ -7,7 +7,7 @@ export default async function Page() {
   const { data, error } = await supabase
     .from('patient_table_view')
     .select('*')
-    .order('full_name', { ascending: true });
+    .order('full_name', { ascending: true, nullsFirst: false });
 
   if (error) {
     console.error('Error fetching patients:', error);
