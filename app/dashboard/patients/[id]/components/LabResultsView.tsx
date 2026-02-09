@@ -12,7 +12,11 @@ interface LabResult {
 
   // if there is no test_name, use the name
   name?: string;
-  explanation: string;
+  explanation: {
+    trend: string;
+    meaning: string;
+    next: string;
+  };
   reference_range: string;
 }
 
@@ -83,8 +87,11 @@ export function LabResultsView({ data }: LabResultsViewProps) {
                     <span>{result.reference_range}</span>
                   </div>
                   {/* Explanation */}
-                  <div className="text-sm text-muted-foreground">
-                    {result.explanation}
+                  <div className="text-sm">
+                    <span className="text-muted-foreground">
+                      Cum sa compara cu valorile anterioare: <br />
+                    </span>
+                    {result.explanation.trend}
                   </div>
                 </div>
               </div>

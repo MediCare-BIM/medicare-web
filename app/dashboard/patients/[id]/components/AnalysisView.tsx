@@ -7,10 +7,7 @@ import { Button } from '@/components/ui/button';
 import { FileText, Download } from 'lucide-react';
 import { LabResultsView } from './LabResultsView';
 import { TimelineItem } from './types';
-import {
-  generateLabResultsPDF,
-  getLabResultsFilename,
-} from '../lib/pdf-generator';
+import { generateLabResultsPDF } from '../lib/pdf-generator';
 
 interface AnalysisViewProps {
   item: TimelineItem;
@@ -62,7 +59,7 @@ export function AnalysisView({ item }: AnalysisViewProps) {
               <div className="flex items-center gap-2 flex-1 min-w-0">
                 <FileText className="h-6 w-6 text-muted-foreground shrink-0" />
                 <span className="text-sm font-medium truncate">
-                  {getLabResultsFilename(item.date)}
+                  Rezultate_Analize.pdf
                 </span>
               </div>
               <Button
