@@ -9,16 +9,16 @@ export function generateLabResultsPDF(item: TimelineItem) {
   }
 
   const doc = new jsPDF();
-  
+
   // Add title
   doc.setFontSize(18);
   doc.text('Rezultate Analize Medicale', 14, 20);
-  
+
   // Add subtitle and date
   doc.setFontSize(11);
   doc.text(item.title || '', 14, 30);
   doc.text(item.subtitle || '', 14, 36);
-  
+
   // Add doctor and location if available
   let yPosition = 42;
   if (item.doctor) {
@@ -29,18 +29,18 @@ export function generateLabResultsPDF(item: TimelineItem) {
     doc.text(`Locație: ${item.location}`, 14, yPosition);
     yPosition += 6;
   }
-  
+
   yPosition += 4;
-  
+
   // Prepare table data
   const tableData = item.resultData.results.map((result: any) => [
     result?.test_name || result?.name || 'N/A',
     `${result?.result ?? 'N/A'} ${result?.unit || ''}`,
     result?.reference_range || 'N/A',
     result?.is_normal ? 'Normal' : 'În afara valorilor',
-    result?.explanation || ''
+    result?.explanation.trend || '',
   ]);
-  
+
   // Add table
   autoTable(doc, {
     startY: yPosition,
@@ -73,16 +73,10 @@ export function generateLabResultsPDF(item: TimelineItem) {
       }
     },
   });
-  
+
   // Generate filename with date
-  const date = new Date(item.date).toISOString().split('T')[0];
-  const filename = `Rezultate_Analize_${date}.pdf`;
-  
+  const filename = `Rezultate_Analize.pdf`;
+
   // Save the PDF
   doc.save(filename);
-}
-
-export function getLabResultsFilename(date: string) {
-  const formattedDate = new Date(date).toISOString().split('T')[0];
-  return `Rezultate_Analize_${formattedDate}.pdf`;
 }
