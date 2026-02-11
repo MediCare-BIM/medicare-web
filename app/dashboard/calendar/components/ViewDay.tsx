@@ -2,7 +2,9 @@
 
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { format, differenceInYears, parseISO } from 'date-fns';
+import { format, differenceInYears } from 'date-fns';
+import { parseISO } from 'date-fns/parseISO';
+
 import {
   IconCalendar,
   IconClock,
