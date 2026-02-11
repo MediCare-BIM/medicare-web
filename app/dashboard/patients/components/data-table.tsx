@@ -326,7 +326,6 @@ export function DataTable({
       (item) =>
         item.full_name?.toLowerCase().includes(searchLower) ||
         item.description?.toLowerCase().includes(searchLower) ||
-        item.description?.toLowerCase().includes(searchLower) ||
         item.treatment?.toLowerCase().includes(searchLower) ||
         item.last_visit?.toLowerCase().includes(searchLower)
     );
