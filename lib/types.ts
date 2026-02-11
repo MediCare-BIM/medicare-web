@@ -36,7 +36,7 @@ export type Report = {
   id: string;
   patientName: string;
   date: string;
-  diagnosis: string;
+  description: string;
   type: ReportType;
   patientId: string;
 };
