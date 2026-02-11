@@ -19,6 +19,18 @@ export type Option = {
 
 export type ReportType = 'Consultație' | 'Prescripție';
 
+// Medication record structure for database storage (without temporary React ID)
+export type MedicationRecord = {
+  name: string;
+  dosage: string;
+  mod_administrare: string;
+};
+
+// Type for the medications JSONB structure in prescriptions table
+export type PrescriptionMedications = {
+  medications: MedicationRecord[];
+};
+
 // Display type for reports, derived from database types
 export type Report = {
   id: string;
