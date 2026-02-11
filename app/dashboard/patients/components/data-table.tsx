@@ -187,7 +187,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     header: 'Diagnostic principal',
     cell: ({ row }) => (
       <div className="max-w-xs text-sm truncate">
-        {row.original.description || 'N/A'}
+        {row.original.diagnosis || 'N/A'}
       </div>
     ),
   },
