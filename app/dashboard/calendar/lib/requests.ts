@@ -1,5 +1,6 @@
 
 import { SupabaseClient } from '@supabase/supabase-js'
+import { fetchPatientTimeline, TimelineItem } from '@/lib/timeline-fetcher'
 
 export interface AppointmentRow {
   id: string;
@@ -14,6 +15,7 @@ export interface AppointmentRow {
   patient_birth_date?: string | null;
   patient_sex?: string | null;
   ai_summary?: string | null;
+  timeline?: TimelineItem[];
   notes?: string | null;
 }
 
@@ -65,13 +67,16 @@ export const getAppointments = async (
     };
   });
 
-  // Fetch AI summaries for each patient
-  const appointmentsWithSummaries = await Promise.all(
+  // Fetch AI summaries and timeline data for each patient
+  const appointmentsWithData = await Promise.all(
     appointments.map(async (appointment) => {
+      const patientId = appointment.patient_id;
+
+      // Fetch AI summary
       const { data: summaryData } = await supabase
         .from('ai_summaries')
         .select('content')
-        .eq('patient_id', appointment.patient_id)
+        .eq('patient_id', patientId)
         .single();
 
       // Extract summaries from content JSONB structure
@@ -88,14 +93,18 @@ export const getAppointments = async (
         }
       }
 
+      // Fetch timeline data using shared function (limit to 5 most recent)
+      const timeline = await fetchPatientTimeline(supabase, patientId);
+
       return {
         ...appointment,
         ai_summary: aiSummaryText,
+        timeline: timeline.slice(0, 5), // Keep only 5 most recent
       };
     })
   );
 
-  return { data: appointmentsWithSummaries, error: null };
+  return { data: appointmentsWithData, error: null };
 }
 
 export const updateAppointment = async (

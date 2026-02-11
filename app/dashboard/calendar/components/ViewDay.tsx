@@ -11,6 +11,7 @@ import {
   IconPencil,
   IconAlarm,
   IconFileText,
+  IconUser,
 } from '@tabler/icons-react';
 import { Sheet, SheetContent, SheetHeader } from '@/components/ui/sheet';
 import { useState } from 'react';
@@ -18,6 +19,9 @@ import { EditAppointmentDialog } from './dialogs/EditAppointmentDialog';
 import { DeleteAppointmentDialog } from './dialogs/DeleteAppointmentDialog';
 import { AppointmentRow } from '../lib/requests';
 import { Separator } from '@/components/ui/separator';
+import { useRouter } from 'next/navigation';
+import { useMemo } from 'react';
+import { TimelineItem as TimelineItemComponent } from '@/app/dashboard/patients/[id]/components/TimelineItem';
 
 interface ViewDayProps {
   selectedAppointment: AppointmentRow;
@@ -62,11 +66,13 @@ const ViewDayContent = ({
   onEdit,
   onDelete,
   onGenerateReport,
+  onViewPatient,
 }: {
   selectedAppointment: AppointmentRow;
   onEdit: () => void;
   onDelete: () => void;
   onGenerateReport: () => void;
+  onViewPatient: () => void;
 }) => {
   const startDate = format(
     new Date(selectedAppointment.start_time),
@@ -92,13 +98,23 @@ const ViewDayContent = ({
   const patientAge = getPatientAge();
   const patientSex = selectedAppointment.patient_sex || 'N/A';
 
-  // Parse AI summary if it exists
-  const aiSummaryLines = selectedAppointment.ai_summary
-    ? selectedAppointment.ai_summary.split('\n').map((line) => {
-        const [subject, ...summaryParts] = line.split(': ');
-        return { subject, summary: summaryParts.join(': ') };
-      })
-    : [];
+  // Convert timeline data to format expected by TimelineItem component
+  const timelineItems = useMemo(() => {
+    if (!selectedAppointment.timeline) return [];
+
+    return selectedAppointment.timeline.map((item) => ({
+      ...item,
+      doctor: undefined,
+      location: undefined,
+      visitReason: undefined,
+      findings: undefined,
+      diagnosis: undefined,
+      treatment: undefined,
+      notes: undefined,
+      pdfFile: undefined,
+      resultData: undefined,
+    }));
+  }, [selectedAppointment.timeline]);
 
   return (
     <div className="space-y-4">
@@ -142,38 +158,43 @@ const ViewDayContent = ({
             </>
           )}
         </div>
-
-        {/* AI Summary */}
-        {aiSummaryLines.length > 0 ? (
-          <div className="space-y-2 pt-1">
-            <h5 className="text-sm font-semibold text-gray-900">Sinteză AI:</h5>
-            {aiSummaryLines.map((item, index) => (
-              <div
-                key={index}
-                className="p-3 rounded-lg bg-white border border-gray-200 space-y-1.5"
-              >
-                <h5 className="text-sm font-semibold text-primary">
-                  {item.subject}
-                </h5>
-                <p className="text-sm text-gray-900 leading-relaxed">
-                  {item.summary}
-                </p>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="p-3 rounded-lg bg-white border border-gray-200">
-            <p className="text-sm text-muted-foreground">
-              Nu sunt informații disponibile pentru acest pacient.
-            </p>
-          </div>
-        )}
       </div>
 
       <Separator />
 
+      {/* Timeline */}
+      {timelineItems.length > 0 && (
+        <>
+          <div className="space-y-3">
+            <h4 className="text-sm font-semibold text-gray-900">
+              Cronologie medicală
+            </h4>
+            <div className="space-y-2">
+              {timelineItems.map((item) => (
+                <TimelineItemComponent
+                  key={item.id}
+                  item={item}
+                  isSelected={false}
+                  onClick={() => {}} // No action in calendar view
+                />
+              ))}
+            </div>
+          </div>
+
+          <Separator />
+        </>
+      )}
+
       {/* Action Buttons */}
       <div className="space-y-2">
+        <Button
+          variant="outline"
+          className="w-full justify-start"
+          onClick={onViewPatient}
+        >
+          <IconUser className="h-4 w-4 mr-2" />
+          Vezi Pagina Pacientului
+        </Button>
         <Button
           variant="outline"
           className="w-full justify-start"
@@ -210,6 +231,7 @@ export function ViewDay({
 }: ViewDayProps) {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const router = useRouter();
 
   const handleOnClose = () => {
     onClose();
@@ -219,6 +241,10 @@ export function ViewDay({
 
   const handleGenerateReport = () => {
     // TODO: Integrate with consultation report modal
+  };
+
+  const handleViewPatient = () => {
+    router.push(`/dashboard/patients/${selectedAppointment.patient_id}`);
   };
 
   if (isMobile) {
@@ -241,6 +267,7 @@ export function ViewDay({
             onEdit={() => setIsEditOpen(true)}
             onDelete={() => setIsDeleteOpen(true)}
             onGenerateReport={handleGenerateReport}
+            onViewPatient={handleViewPatient}
           />
           {isEditOpen && (
             <EditAppointmentDialog
@@ -262,18 +289,23 @@ export function ViewDay({
   }
 
   return (
-    <div className="w-[400px] border-l bg-white p-6 flex flex-col gap-6 overflow-y-auto">
-      <ViewDayHeader
-        title={selectedAppointment.patient_full_name || ''}
-        status="Confirmed"
-        onClose={handleOnClose}
-      />
-      <ViewDayContent
-        selectedAppointment={selectedAppointment}
-        onEdit={() => setIsEditOpen(true)}
-        onDelete={() => setIsDeleteOpen(true)}
-        onGenerateReport={handleGenerateReport}
-      />
+    <div className="w-[400px] h-full min-h-0 border-l bg-white flex flex-col overflow-hidden">
+      <div className="flex-shrink-0 p-6">
+        <ViewDayHeader
+          title={selectedAppointment.patient_full_name || ''}
+          status="Confirmed"
+          onClose={handleOnClose}
+        />
+      </div>
+      <div className="flex-1 min-h-0 overflow-y-auto px-6 pb-6">
+        <ViewDayContent
+          selectedAppointment={selectedAppointment}
+          onEdit={() => setIsEditOpen(true)}
+          onDelete={() => setIsDeleteOpen(true)}
+          onGenerateReport={handleGenerateReport}
+          onViewPatient={handleViewPatient}
+        />
+      </div>
       {isEditOpen && (
         <EditAppointmentDialog
           isOpen={isEditOpen}

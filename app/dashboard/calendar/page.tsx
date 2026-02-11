@@ -9,9 +9,11 @@ export default function CalendarPage() {
   const calendarRef = useRef<FullCalendar>(null);
 
   return (
-    <>
+    <div className="flex flex-col h-screen overflow-hidden">
       <CalendarHeader calendarRef={calendarRef} />
-      <Calendar calendarRef={calendarRef} />
-    </>
+      <div className="flex-1 min-h-0">
+        <Calendar calendarRef={calendarRef} />
+      </div>
+    </div>
   );
 }
