@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { format } from 'date-fns';
+import { format, differenceInYears, parseISO } from 'date-fns';
 import {
   IconCalendar,
   IconClock,
@@ -77,6 +77,29 @@ const ViewDayContent = ({
     ? format(new Date(selectedAppointment.end_time), 'p')
     : '';
 
+  // Calculate patient age
+  const getPatientAge = (): string => {
+    if (!selectedAppointment.patient_birth_date) return 'N/A';
+    try {
+      const birthDate = parseISO(selectedAppointment.patient_birth_date);
+      const age = differenceInYears(new Date(), birthDate);
+      return age.toString();
+    } catch {
+      return 'N/A';
+    }
+  };
+
+  const patientAge = getPatientAge();
+  const patientSex = selectedAppointment.patient_sex || 'N/A';
+
+  // Parse AI summary if it exists
+  const aiSummaryLines = selectedAppointment.ai_summary
+    ? selectedAppointment.ai_summary.split('\n').map((line) => {
+        const [subject, ...summaryParts] = line.split(': ');
+        return { subject, summary: summaryParts.join(': ') };
+      })
+    : [];
+
   return (
     <div className="space-y-4">
       {/* Time Details */}
@@ -100,14 +123,51 @@ const ViewDayContent = ({
       <Separator />
 
       {/* Patient Info */}
-      <div className="space-y-2">
+      <div className="space-y-3">
         <h4 className="text-sm font-semibold text-gray-900">Despre Pacient:</h4>
-        <p className="text-sm text-gray-600 leading-relaxed">
-          Hipertensiune arterială + Diabet tip 2<br />
-          45 ani
-          <br />
-          Medicație: Metformin 2000mg x 2/zi, Enalapril 300mg x 1/zi, Omega 3
-        </p>
+
+        {/* Patient Demographics */}
+        <div className="flex gap-4 text-sm text-gray-600">
+          <div className="flex items-center gap-1.5">
+            <span className="text-muted-foreground">Vârstă:</span>
+            <span className="font-medium text-gray-900">{patientAge} ani</span>
+          </div>
+          {patientSex !== 'N/A' && (
+            <>
+              <span className="text-gray-300">•</span>
+              <div className="flex items-center gap-1.5">
+                <span className="text-muted-foreground">Sex:</span>
+                <span className="font-medium text-gray-900">{patientSex}</span>
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* AI Summary */}
+        {aiSummaryLines.length > 0 ? (
+          <div className="space-y-2 pt-1">
+            <h5 className="text-sm font-semibold text-gray-900">Sinteză AI:</h5>
+            {aiSummaryLines.map((item, index) => (
+              <div
+                key={index}
+                className="p-3 rounded-lg bg-white border border-gray-200 space-y-1.5"
+              >
+                <h5 className="text-sm font-semibold text-primary">
+                  {item.subject}
+                </h5>
+                <p className="text-sm text-gray-900 leading-relaxed">
+                  {item.summary}
+                </p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="p-3 rounded-lg bg-white border border-gray-200">
+            <p className="text-sm text-muted-foreground">
+              Nu sunt informații disponibile pentru acest pacient.
+            </p>
+          </div>
+        )}
       </div>
 
       <Separator />
@@ -159,7 +219,6 @@ export function ViewDay({
 
   const handleGenerateReport = () => {
     // TODO: Integrate with consultation report modal
-    console.log('Generate report for appointment:', selectedAppointment.id);
   };
 
   if (isMobile) {

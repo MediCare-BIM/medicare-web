@@ -93,7 +93,7 @@ export function CalendarHeader({
               </Button>
             </div>
             <Button variant="outline" className="h-9" onClick={handleToday}>
-              Today
+              Astăzi
             </Button>
             <h2 className="text-lg font-semibold text-gray-700 ml-2">
               {getPeriodString(date, view)}
@@ -113,21 +113,21 @@ export function CalendarHeader({
                 aria-label="Day view"
                 className="px-4"
               >
-                Day
+                Zi
               </ToggleGroupItem>
               <ToggleGroupItem
                 value="week"
                 aria-label="Week view"
                 className="px-4"
               >
-                Week
+                Săptămână
               </ToggleGroupItem>
               <ToggleGroupItem
                 value="month"
                 aria-label="Month view"
                 className="px-4"
               >
-                Month
+                Lună
               </ToggleGroupItem>
             </ToggleGroup>
           </div>
@@ -138,7 +138,7 @@ export function CalendarHeader({
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
               <Input
                 type="search"
-                placeholder="Search appointments..."
+                placeholder="Caută programări..."
                 className="pl-9 pr-3 h-9 w-[240px]"
                 onChange={(e) => handleSearch(e.target.value)}
               />
@@ -148,7 +148,7 @@ export function CalendarHeader({
               onClick={() => setIsAddDialogOpen(true)}
             >
               <Plus className="h-4 w-4 mr-2" />
-              Add Appointment
+              Adauga programare
             </Button>
           </div>
         </div>
