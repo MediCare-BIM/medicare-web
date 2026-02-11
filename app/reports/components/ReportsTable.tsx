@@ -22,7 +22,7 @@ export function ReportsTable({ reports }: ReportsTableProps) {
         <TableRow>
           <TableHead>Nume pacient</TableHead>
           <TableHead>Data</TableHead>
-          <TableHead>Diagnostic principal</TableHead>
+          <TableHead>Observații</TableHead>
           <TableHead>Tip raport</TableHead>
           <TableHead className="text-right">Acțiuni</TableHead>
         </TableRow>
@@ -43,7 +43,7 @@ export function ReportsTable({ reports }: ReportsTableProps) {
               })}
             </TableCell>
             <TableCell>
-              <div className="max-w-[300px] truncate">{report.diagnosis}</div>
+              <div className="max-w-[300px] truncate">{report.description}</div>
             </TableCell>
             <TableCell>
               <ReportTypeBadge type={report.type} />

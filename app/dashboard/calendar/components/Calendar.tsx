@@ -119,7 +119,7 @@ export function Calendar({
 
   return (
     <div className="h-full border-t">
-      <div className="flex h-full">
+      <div className="flex h-full ">
         <div className="flex-1 relative">
           <FullCalendar
             ref={calendarRef}

@@ -55,7 +55,8 @@ async function getReportsData() {
         };
     }
 
-    // Normalize consultations to Report type
+
+    // Normalize consultations to Report type (use 'description' instead of 'diagnosis')
     const consultationReports: Report[] = (consultations as ControlConsultationWithPatient[] || []).map((consultation) => {
         const patient = Array.isArray(consultation.patients)
             ? consultation.patients[0]
@@ -65,13 +66,13 @@ async function getReportsData() {
             id: consultation.id,
             patientName: patient?.full_name || 'N/A',
             date: consultation.generated_at,
-            diagnosis: consultation.diagnosis || 'Consultație medicală',
+            description: consultation.diagnosis || 'Consultație medicală',
             type: 'Consultație' as const,
             patientId: consultation.patient_id,
         };
     });
 
-    // Normalize prescriptions to Report type
+    // Normalize prescriptions to Report type (use 'description' for medication summary)
     const prescriptionReports: Report[] = (prescriptions as PrescriptionWithPatient[] || []).map((prescription) => {
         const patient = Array.isArray(prescription.patients)
             ? prescription.patients[0]
@@ -81,7 +82,7 @@ async function getReportsData() {
             id: prescription.id,
             patientName: patient?.full_name || 'N/A',
             date: prescription.created_at,
-            diagnosis: extractMedicationsLabel(prescription.medications),
+            description: extractMedicationsLabel(prescription.medications),
             type: 'Prescripție' as const,
             patientId: prescription.patient_id,
         };
@@ -99,23 +100,28 @@ async function getReportsData() {
 }
 
 // Helper function to extract label from medications JSONB
+// Structure: { medications: [{ name: string, dosage: string, mod_administrare: string }, ...] }
 function extractMedicationsLabel(medications: Prescription['medications']): string {
     if (!medications) return 'Prescripție medicală';
 
-    // If medications is an array, get the first medication name
-    if (Array.isArray(medications) && medications.length > 0) {
-        const firstMed = medications[0];
-        if (typeof firstMed === 'string') {
-            return firstMed.substring(0, 50);
+    // Extract the medications array from the object structure
+    if (typeof medications === 'object' && !Array.isArray(medications) && 'medications' in medications) {
+        const medsArray = medications.medications;
+        
+        if (Array.isArray(medsArray) && medsArray.length > 0) {
+            const names = medsArray
+                .map((med) => {
+                    if (med && typeof med === 'object' && 'name' in med && typeof med.name === 'string') {
+                        return med.name;
+                    }
+                    return '';
+                })
+                .filter(Boolean);
+            
+            if (names.length > 0) {
+                return names.join(', ').substring(0, 80);
+            }
         }
-        if (firstMed && typeof firstMed === 'object' && 'name' in firstMed && typeof firstMed.name === 'string') {
-            return firstMed.name.substring(0, 50);
-        }
-    }
-
-    // If medications is an object with a name property
-    if (typeof medications === 'object' && medications !== null && !Array.isArray(medications) && 'name' in medications && typeof medications.name === 'string') {
-        return medications.name.substring(0, 50);
     }
 
     return 'Prescripție medicală';

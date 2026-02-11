@@ -106,7 +106,7 @@ export const schema = z.object({
   patient_id: z.string(),
   full_name: z.string(),
   last_visit: z.string().nullable(),
-  diagnosis: z.string().nullable(),
+  description: z.string().nullable(),
   treatment: z.string().nullable(),
   status: z.string().default('Active'),
 });
@@ -187,7 +187,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     header: 'Diagnostic principal',
     cell: ({ row }) => (
       <div className="max-w-xs text-sm truncate">
-        {row.original.diagnosis || 'N/A'}
+        {row.original.description || 'N/A'}
       </div>
     ),
   },
@@ -325,7 +325,7 @@ export function DataTable({
     return filteredData.filter(
       (item) =>
         item.full_name?.toLowerCase().includes(searchLower) ||
-        item.diagnosis?.toLowerCase().includes(searchLower) ||
+        item.description?.toLowerCase().includes(searchLower) ||
         item.treatment?.toLowerCase().includes(searchLower) ||
         item.last_visit?.toLowerCase().includes(searchLower)
     );
@@ -707,10 +707,11 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
               </div>
             </div>
             <div className="flex flex-col gap-3">
-              <Label htmlFor="primaryDiagnosis">Diagnostic principal</Label>
+              <Label htmlFor="primaryDescription">Descriere</Label>
               <Input
-                id="primaryDiagnosis"
-                defaultValue={item.diagnosis || ''}
+                id="primaryDescription"
+                defaultValue={item.description || ''}
+                placeholder="Patient medical record and treatment history. Review description"
               />
             </div>
             <div className="flex flex-col gap-3">
