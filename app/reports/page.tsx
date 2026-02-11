@@ -105,7 +105,7 @@ function extractMedicationsLabel(medications: Prescription['medications']): stri
     if (!medications) return 'Prescripție medicală';
 
     // Extract the medications array from the object structure
-    if (typeof medications === 'object' && medications !== null && !Array.isArray(medications) && 'medications' in medications) {
+    if (typeof medications === 'object' && !Array.isArray(medications) && 'medications' in medications) {
         const medsArray = medications.medications;
         
         if (Array.isArray(medsArray) && medsArray.length > 0) {
