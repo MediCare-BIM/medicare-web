@@ -74,14 +74,7 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from '@/components/ui/drawer';
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -106,7 +99,7 @@ export const schema = z.object({
   patient_id: z.string(),
   full_name: z.string(),
   last_visit: z.string().nullable(),
-  description: z.string().nullable(),
+  diagnosis: z.string().nullable(),
   treatment: z.string().nullable(),
   status: z.string().default('Active'),
 });
@@ -187,7 +180,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     header: 'Diagnostic principal',
     cell: ({ row }) => (
       <div className="max-w-xs text-sm truncate">
-        {row.original.description || 'N/A'}
+        {row.original.diagnosis || 'N/A'}
       </div>
     ),
   },
@@ -301,6 +294,7 @@ export function DataTable({
     pageIndex: 0,
     pageSize: 20,
   });
+
   const sortableId = React.useId();
   const sensors = useSensors(
     useSensor(MouseSensor, {}),
@@ -325,7 +319,7 @@ export function DataTable({
     return filteredData.filter(
       (item) =>
         item.full_name?.toLowerCase().includes(searchLower) ||
-        item.description?.toLowerCase().includes(searchLower) ||
+        item.diagnosis?.toLowerCase().includes(searchLower) ||
         item.treatment?.toLowerCase().includes(searchLower) ||
         item.last_visit?.toLowerCase().includes(searchLower)
     );
@@ -710,7 +704,7 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
               <Label htmlFor="primaryDescription">Descriere</Label>
               <Input
                 id="primaryDescription"
-                defaultValue={item.description || ''}
+                defaultValue={item.diagnosis || ''}
                 placeholder="Patient medical record and treatment history. Review description"
               />
             </div>

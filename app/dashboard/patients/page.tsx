@@ -10,7 +10,6 @@ export default async function Page() {
     .order('full_name', { ascending: true, nullsFirst: false });
 
   if (error) {
-    console.error('Error fetching patients:', error);
     return (
       <div className="flex flex-1 flex-col">
         <h2 className="text-2xl font-bold tracking-tight pl-4 lg:pl-6 my-2">
