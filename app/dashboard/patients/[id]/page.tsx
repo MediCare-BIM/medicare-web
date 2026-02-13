@@ -28,12 +28,14 @@ export default async function PatientPage({
     .eq('patient_id', patientId)
     .single();
 
-  // Fetch conditions for patient status
-  const { data: conditions } = await supabase
-    .from('conditions')
-    .select('*')
+  // Fetch latest diagnosis from control_consultations (like patient_table_view)
+  const { data: latestConsultation } = await supabase
+    .from('control_consultations')
+    .select('diagnosis')
     .eq('patient_id', patientId)
-    .eq('status', 'active');
+    .order('generated_at', { ascending: false })
+    .limit(1)
+    .single();
 
   // Fetch timeline data using shared function
   const timelineData = await fetchPatientTimeline(supabase, patientId);
@@ -43,10 +45,7 @@ export default async function PatientPage({
     id: patient?.id || '',
     name: patient?.full_name || 'Pacient necunoscut',
     status: 'Stabil', // Could be calculated based on conditions
-    conditions:
-      conditions && conditions.length > 0
-        ? conditions.map((c) => c.name).join(' + ')
-        : 'Fără afecțiuni active',
+    conditions: latestConsultation?.diagnosis || 'Fără diagnostic',
     age: calculateAge(patient?.birth_date || null),
   };
 
