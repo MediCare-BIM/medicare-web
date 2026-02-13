@@ -55,12 +55,22 @@ export function formatDate(dateString: string): string {
  */
 export function calculateAge(birthDate: string | null): number {
   if (!birthDate) return 0;
+
   const today = new Date();
   const birth = new Date(birthDate);
+
+  // Check if date is valid
+  if (isNaN(birth.getTime())) {
+    console.error('Invalid birth date:', birthDate);
+    return 0;
+  }
+
   let age = today.getFullYear() - birth.getFullYear();
   const monthDiff = today.getMonth() - birth.getMonth();
+
   if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
     age--;
   }
+
   return age;
 }

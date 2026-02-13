@@ -24,8 +24,9 @@ export function PatientHeader({ patientData }: PatientHeaderProps) {
           {patientData.status}
         </span>
       </div>
-      <p className="text-muted-foreground">
-        {patientData.conditions} | {patientData.age} ani
+      <p className="text-muted-foreground flex items-center gap-2">
+        <span className="truncate max-w-md">{patientData.conditions}</span>
+        <span>| {patientData.age} ani</span>
       </p>
     </div>
   );
